@@ -7,7 +7,7 @@
 
 # Site Settings
 title                    : "Yiyu Li"
-description              : "PhD candidate in Computer Science at City University of Hong Kong"
+description              : ""
 repository               : "yiyulics/yiyulics.github.io"
 google_scholar_stats_use_cdn : true
 
@@ -22,8 +22,8 @@ baidu_site_verification  :  # get baidu_site_verification from https://ziyuan.ba
 # Site Author
 author:
   name             : "Yiyu Li"
-  avatar           : "images/android-chrome-512x512.png"
-  bio              : "PhD candidate in Computer Science at City University of Hong Kong"
+  avatar           : "images/avatar-android-chrome-512x512.png"
+  bio              : "CS PhD @ CityU"
   location         : "Hong Kong"
   employer         :
   pubmed           : 
