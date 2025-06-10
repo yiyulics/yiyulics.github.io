@@ -28,15 +28,14 @@ His research focuses on the intersections of computer vision and computer graphi
 
 # 📝 Publications 
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">CVPR 2024</div><img src='images/pca_500x300.jpg' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">CVPR 2024</div><img src='images/pca_500x219.jpg' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 [Color Shift Estimation-and-Correction for Image Enhancement](https://openaccess.thecvf.com/content/CVPR2024/papers/Li_Color_Shift_Estimation-and-Correction_for_Image_Enhancement_CVPR_2024_paper.pdf)
 
 **Yiyu Li**, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau
 
-[**arXiv**](https://arxiv.org/abs/2405.17725) <strong><span class='show_paper_citations' data='SXOMocYAAAAJ:9yKSN-GCB0IC'></span></strong>
-[**Project**](https://github.com/yiyulics/CSEC)
+[**arXiv**](https://arxiv.org/abs/2405.17725) \| [**Project**](https://github.com/yiyulics/CSEC)
 
 - This work solves the problem of both over- and under-exposure in images using color shift priors. 
 </div>
@@ -58,8 +57,8 @@ His research focuses on the intersections of computer vision and computer graphi
 - *2019.07 - 2019.08*, [IEEE UV Program](https://universalvillage.org/), Boston, USA.
 
 # 🎖 Honors and Awards
-- *2018* Renmin Scholarship
-- *2017* Special Renmin Scholarship
+- *2018*, Renmin Scholarship
+- *2017*, Special Renmin Scholarship
 
 # 📄 Academic Services
 - *Reviewer*: CVPR, ICCV, NeurIPS, ICLR, ICML, etc.

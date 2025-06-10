@@ -9,7 +9,7 @@ def parse_args():
     parser.add_argument("--input_path", type=str, default="images/pca.jpg")
     parser.add_argument("--output_dir", type=str, default=None)
     parser.add_argument("--size_w", type=int, default=500)
-    parser.add_argument("--size_h", type=int, default=300)
+    parser.add_argument("--size_h", type=int, default=219)
     return parser.parse_args()
 
 
