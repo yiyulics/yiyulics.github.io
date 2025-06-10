@@ -21,10 +21,13 @@ Yiyu is currently a third-year PhD candidate at the City University of Hong Kong
 
 His research focuses on the intersections of computer vision and computer graphics. He is particularly interested in modeling the physical world using various approaches, including reconstruction, generation, and simulation. He has published papers at the top international conferences with total citations <a href='https://scholar.google.com/citations?user=SXOMocYAAAAJ'><img src="https://img.shields.io/endpoint?url={{ url | url_encode }}&logo=Google%20Scholar&labelColor=f6f6f6&color=9cf&style=flat&label=citations"></a>.
 
+<span class='anchor' id='-news'></span>
 
 # 🔥 News
 <!-- - *2022.02*: &nbsp;🎉🎉 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet.  -->
 - *2024.02*: &nbsp;🎉🎉 One paper accepted by CVPR 2024.
+
+<span class='anchor' id='-publications'></span>
 
 # 📝 Publications 
 
@@ -43,6 +46,8 @@ His research focuses on the intersections of computer vision and computer graphi
 
 <!-- - [Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet](https://github.com), A, B, C, **CVPR 2020** -->
 
+<span class='anchor' id='-educations'></span>
+
 # 📖 Educations
 - *2022.09 - now*, Ph.D. in Computer Science, City University of Hong Kong, Hong Kong.
 - *2016.08 - 2020.07*, BEng in Computer Science and Technology, Harbin Institute of Technology, China.
@@ -51,14 +56,20 @@ His research focuses on the intersections of computer vision and computer graphi
 - *2021.06*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
 - *2021.03*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet.  \| [\[video\]](https://github.com/) -->
 
+<span class='anchor' id='-internships'></span>
+
 # 💻 Internships
 - *2024.12 - 2025.06*, [Huawei Hong Kong Research Center](https://www.linkedin.com/company/huawei-hong-kong-research-center-hkrc/posts/?feedView=all), Hong Kong.
 - *2020.06 - 2021.01*, [Baidu Cognitive Computing Lab](https://research.baidu.com/), Beijing, China.
 - *2019.07 - 2019.08*, [IEEE UV Program](https://universalvillage.org/), Boston, USA.
 
+<span class='anchor' id='-honors-and-awards'></span>
+
 # 🎖 Honors and Awards
 - *2018*, Renmin Scholarship
 - *2017*, Special Renmin Scholarship
+
+<span class='anchor' id='-academic-services'></span>
 
 # 📄 Academic Services
 - *Reviewer*: CVPR, ICCV, NeurIPS, ICLR, ICML, etc.
