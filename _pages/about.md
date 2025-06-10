@@ -17,9 +17,9 @@ redirect_from:
 
 <span class='anchor' id='about-me'></span>
 
-Yiyu is currently a third-year PhD candidate at the City University of Hong Kong, co-supervised by Professor [Rynson W.H. Lau](https://www.cs.cityu.edu.hk/~rynson/) and Professor [Gerhard Petrus Hancke](https://scholars.cityu.edu.hk/en/persons/gerhard-petrus-hancke). Before this, he earned his Bachelor's degree from the Harbin Institute of Technology. In 
+I am currently a third-year PhD candidate at the City University of Hong Kong, co-supervised by Professor [Rynson W.H. Lau](https://www.cs.cityu.edu.hk/~rynson/) and Professor [Gerhard Petrus Hancke](https://scholars.cityu.edu.hk/en/persons/gerhard-petrus-hancke). Before this, I earned my Bachelor's degree from the Harbin Institute of Technology.
 
-His research focuses on the intersections of computer vision and computer graphics. He is particularly interested in modeling the physical world using various approaches, including reconstruction, generation, and simulation. He has published papers at the top international conferences with total citations <a href='https://scholar.google.com/citations?user=SXOMocYAAAAJ'><img src="https://img.shields.io/endpoint?url={{ url | url_encode }}&logo=Google%20Scholar&labelColor=f6f6f6&color=9cf&style=flat&label=citations"></a>.
+My research focuses on the intersections of computer vision and computer graphics. I am particularly interested in modeling the physical world using various approaches, including reconstruction, generation, and simulation. I have published papers at the top international conferences with total citations <a href='https://scholar.google.com/citations?user=SXOMocYAAAAJ'><img src="https://img.shields.io/endpoint?url={{ url | url_encode }}&logo=Google%20Scholar&labelColor=f6f6f6&color=9cf&style=flat&label=citations"></a>.
 
 <span class='anchor' id='-news'></span>
 
