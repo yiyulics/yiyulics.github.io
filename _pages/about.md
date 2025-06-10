@@ -17,14 +17,14 @@ redirect_from:
 
 <span class='anchor' id='about-me'></span>
 
-Yiyu is currently a third-year PhD candidate at the City University of Hong Kong, co-supervised by Professor [Rynson W.H. Lau](https://www.cs.cityu.edu.hk/~rynson/) and Professor [Gerhard Petrus Hancke](https://scholars.cityu.edu.hk/en/persons/gerhard-petrus-hancke(9e59c8eb-ba32-4075-97f7-e44e82367742).html). Before this, he earned his Bachelor's degree from the Harbin Institute of Technology.
+Yiyu is currently a third-year PhD candidate at the City University of Hong Kong, co-supervised by Professor [Rynson W.H. Lau](https://www.cs.cityu.edu.hk/~rynson/) and Professor [Gerhard Petrus Hancke](https://scholars.cityu.edu.hk/en/persons/gerhard-petrus-hancke). Before this, he earned his Bachelor's degree from the Harbin Institute of Technology. In 
 
 His research focuses on the intersections of computer vision and computer graphics. He is particularly interested in modeling the physical world using various approaches, including reconstruction, generation, and simulation. He has published papers at the top international conferences with total citations <a href='https://scholar.google.com/citations?user=SXOMocYAAAAJ'><img src="https://img.shields.io/endpoint?url={{ url | url_encode }}&logo=Google%20Scholar&labelColor=f6f6f6&color=9cf&style=flat&label=citations"></a>.
 
 <span class='anchor' id='-news'></span>
 
 # 🔥 News
-<!-- - *2022.02*: &nbsp;🎉🎉 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet.  -->
+- *2024.06*: &nbsp;🎉🎉 See you in Seattle!
 - *2024.02*: &nbsp;🎉🎉 One paper accepted by CVPR 2024.
 
 <span class='anchor' id='-publications'></span>
