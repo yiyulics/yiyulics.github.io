@@ -38,7 +38,7 @@ My research focuses on the intersections of computer vision and computer graphic
 
 **Yiyu Li**, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau
 
-[**ArXiv**](https://arxiv.org/abs/2405.17725) \| [**CVF**](https://openaccess.thecvf.com/content/CVPR2024/papers/Li_Color_Shift_Estimation-and-Correction_for_Image_Enhancement_CVPR_2024_paper.pdf) \| [**Project**](https://github.com/yiyulics/CSEC)
+[**ArXiv**](https://arxiv.org/abs/2405.17725) \| [**CVF**](https://openaccess.thecvf.com/content/CVPR2024/papers/Li_Color_Shift_Estimation-and-Correction_for_Image_Enhancement_CVPR_2024_paper.pdf) \| [**Code**](https://github.com/yiyulics/CSEC)
 
 - This work solves the problem of both over- and under-exposure in images using color shift priors. 
 </div>
