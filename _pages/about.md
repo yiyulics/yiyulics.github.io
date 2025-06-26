@@ -32,7 +32,7 @@ My research focuses on the intersections of computer vision and computer graphic
 # 📝 Publications 
 
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ICCV 2025</div><img src='images/cropped_sehdr.jpg' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ICCV 2025</div><img src='images/sehdr.jpg' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 [SeHDR: Single-Exposure HDR Scene Reconstruction via 3D Gaussian Bracketing](https://yiyulics.github.io/)
