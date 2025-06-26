@@ -24,12 +24,28 @@ My research focuses on the intersections of computer vision and computer graphic
 <span class='anchor' id='-news'></span>
 
 # 🔥 News
-- *2024.06*: &nbsp;🎉🎉 See you in Seattle!
-- *2024.02*: &nbsp;🎉🎉 One paper accepted by CVPR 2024.
+- *2025.06*: &nbsp;🎉🎉 One paper accepted by ICCV 2025. See you in Honolulu, Hawaii!
+- *2024.02*: &nbsp;🎉🎉 One paper accepted by CVPR 2024. See you in Seattle!
 
 <span class='anchor' id='-publications'></span>
 
 # 📝 Publications 
+
+
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ICCV 2025</div><img src='images/sehdr.jpg' alt="sym" width="100%"></div></div>
+<div class='paper-box-text' markdown="1">
+
+[SeHDR: Single-Exposure HDR Scene Reconstruction via 3D Gaussian Bracketing](https://yiyulics.github.io/)
+
+**Yiyu Li**, Haoyuan Wang, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau
+
+Coming soon!
+
+- This work proposes to reconstruct HDR scenes from a set of single exposure multi-view images.
+</div>
+</div>
+
+
 
 <div class='paper-box'><div class='paper-box-image'><div><div class="badge">CVPR 2024</div><img src='images/pca_500x219.jpg' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">

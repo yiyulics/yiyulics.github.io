@@ -6,10 +6,10 @@ import cv2
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input_path", type=str, default="images/pca.jpg")
+    parser.add_argument("--input_path", type=str, default="images/merged_image.jpg")
     parser.add_argument("--output_dir", type=str, default=None)
     parser.add_argument("--size_w", type=int, default=500)
-    parser.add_argument("--size_h", type=int, default=219)
+    parser.add_argument("--size_h", type=int, default=350)
     return parser.parse_args()
 
 
@@ -24,7 +24,7 @@ if __name__ == "__main__":
         output_dir = os.path.dirname(input_path)
     else:
         os.makedirs(output_dir, exist_ok=True)
-        
+
     img_name = os.path.basename(input_path)
     img_name = os.path.splitext(img_name)[0]
     img_name = f"{img_name}_{size_w}x{size_h}.jpg"
