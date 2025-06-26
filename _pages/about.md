@@ -25,6 +25,8 @@ My research focuses on the intersections of computer vision and computer graphic
 
 # 🔥 News
 - *2025.06*: &nbsp;🎉🎉 One paper accepted by ICCV 2025. See you in Honolulu, Hawaii!
+- *2025.06*: &nbsp;🎉🎉 I am joining Embodied AI Center, Shanghai AI Laboratory as a research intern.
+- *2024.12*: &nbsp;🎉🎉 I am joining Huawei Hong Kong Research Center as a research intern.
 - *2024.02*: &nbsp;🎉🎉 One paper accepted by CVPR 2024. See you in Seattle!
 
 <span class='anchor' id='-publications'></span>
@@ -75,6 +77,8 @@ Coming soon!
 <span class='anchor' id='-internships'></span>
 
 # 💻 Internships
+
+- *2025.06 - now*, [Embodied AI Center, Shanghai AI Laboratory](https://github.com/OpenRobotLab), Shanghai, China.
 - *2024.12 - 2025.06*, [Huawei Hong Kong Research Center](https://www.linkedin.com/company/huawei-hong-kong-research-center-hkrc/posts/?feedView=all), Hong Kong.
 - *2020.06 - 2021.01*, [Baidu Cognitive Computing Lab](https://research.baidu.com/), Beijing, China.
 - *2019.07 - 2019.08*, [IEEE UV Program](https://universalvillage.org/), Boston, USA.
