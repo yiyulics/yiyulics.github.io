@@ -32,12 +32,12 @@ My research focuses on the intersections of computer vision and computer graphic
 # 📝 Publications 
 
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ICCV 2025</div><img src='images/sehdr.jpg' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ICCV 2025</div><img src='images/cropped_sehdr.jpg' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 [SeHDR: Single-Exposure HDR Scene Reconstruction via 3D Gaussian Bracketing](https://yiyulics.github.io/)
 
-**Yiyu Li**, Haoyuan Wang, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau
+<u>**Yiyu Li**</u>, Haoyuan Wang, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau
 
 Coming soon!
 
@@ -52,7 +52,7 @@ Coming soon!
 
 [Color Shift Estimation-and-Correction for Image Enhancement](https://openaccess.thecvf.com/content/CVPR2024/papers/Li_Color_Shift_Estimation-and-Correction_for_Image_Enhancement_CVPR_2024_paper.pdf)
 
-**Yiyu Li**, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau
+<u>**Yiyu Li**</u>, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau
 
 [**ArXiv**](https://arxiv.org/abs/2405.17725) \| [**CVF**](https://openaccess.thecvf.com/content/CVPR2024/papers/Li_Color_Shift_Estimation-and-Correction_for_Image_Enhancement_CVPR_2024_paper.pdf) \| [**Code**](https://github.com/yiyulics/CSEC)
 
