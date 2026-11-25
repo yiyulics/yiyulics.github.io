@@ -1,0 +1,25 @@
+# Newest first. `date` is free text (e.g. "2026.03" or just "2026"); `text` supports Markdown.
+# The first `visible` items are shown; the rest fold under "Earlier news".
+
+visible: 5
+entries:
+  - date: "2026"
+    text: Recognized as a **Top Reviewer** of NeurIPS 2026.
+  - date: "2026.03"
+    text: Joined **Alibaba Amap** as a research intern, working on autoregressive video generation.
+  - date: "2025"
+    text: Recognized as a **Top Reviewer** of NeurIPS 2025 and an **Outstanding Reviewer** of ICCV 2025.
+  - date: "2025.09"
+    text: >-
+      The [paper](https://arxiv.org/abs/2509.20400) and [code](https://github.com/yiyulics/SeHDR)
+      of **SeHDR** are now public.
+  - date: "2025.06"
+    text: "**SeHDR** is accepted to ICCV 2025."
+  - date: "2025.06"
+    text: Joined the Embodied AI Center of **Shanghai AI Laboratory** as a research intern.
+  - date: "2024.12"
+    text: Joined **Huawei Hong Kong Research Center** as a research intern.
+  - date: "2024"
+    text: Received the Outstanding Academic Performance Award for Research Degree Students from CityU.
+  - date: "2024.02"
+    text: "**Color Shift Estimation-and-Correction** is accepted to CVPR 2024."

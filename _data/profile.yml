@@ -1,0 +1,77 @@
+# Who you are. Shown in the sidebar and at the top of the page.
+
+name: Yiyu Li
+role: Ph.D. Candidate, Computer Science
+affiliation: City University of Hong Kong
+affiliation_url: https://www.cityu.edu.hk/
+email: yiyuli.cs@gmail.com
+avatar: /images/avatar.webp          # square, shown at 96px
+cv: /files/Yiyu_Li_CV.pdf            # rebuilt by scripts/build_public_cv.sh; remove this line to hide the button
+
+# One paragraph per item. Markdown is supported.
+bio:
+  - >-
+    I am a final-year Ph.D. candidate in Computer Science at the
+    [City University of Hong Kong](https://www.cityu.edu.hk/), co-supervised by
+    Prof. [Rynson W.H. Lau](https://www.cs.cityu.edu.hk/~rynson/) and
+    Prof. [Gerhard Petrus Hancke](https://scholars.cityu.edu.hk/en/persons/gerhard-petrus-hancke).
+    My current research focuses on Sim2Real2Sim, world models, and video generation.
+  - >-
+    I am exploring code-based world models that represent scenes and their evolution in code,
+    as well as coding agents that write and execute code to generate videos and other visual content.
+    My previous work spans 3D generation, texture synthesis, 3D reconstruction, and image enhancement.
+    I am currently a research intern at Alibaba Amap, and I received my B.Eng. from
+    Harbin Institute of Technology.
+
+# Highlighted note under the bio. Delete the whole `status` block to hide it.
+status:
+  label: On the job market
+  text: >-
+    I expect to graduate in August 2027 and am looking for positions starting in 2027.
+    I am open to both industry research roles and academic positions (postdoc / faculty).
+
+interests:
+  - World Models
+  - Video Generation
+  - Sim2Real2Sim
+  - Coding Agents
+  - 3D Generation & Reconstruction
+  - Image Enhancement
+
+# Icon links, in display order. Available icons: mail, scholar, github, linkedin, dblp, orcid.
+links:
+  - label: Email
+    icon: mail
+    url: mailto:yiyuli.cs@gmail.com
+  - label: Google Scholar
+    icon: scholar
+    url: https://scholar.google.com/citations?user=SXOMocYAAAAJ&hl=en
+  - label: GitHub
+    icon: github
+    url: https://github.com/yiyulics
+  - label: LinkedIn
+    icon: linkedin
+    url: https://www.linkedin.com/in/yiyu-li-cs/
+  - label: DBLP
+    icon: dblp
+    url: https://dblp.org/pid/141/1682.html
+  - label: ORCID
+    icon: orcid
+    url: https://orcid.org/0009-0000-8264-8086
+
+# Section order of the page and of the navigation. `id` must match a file in _includes/sections/.
+sections:
+  - id: about
+    title: About
+  - id: news
+    title: News
+  - id: publications
+    title: Publications
+  - id: experience
+    title: Experience
+  - id: education
+    title: Education
+  - id: honors
+    title: Honors
+  - id: service
+    title: Service & Teaching

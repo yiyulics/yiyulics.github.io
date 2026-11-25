@@ -1,0 +1,25 @@
+{%- assign profile = site.data.profile %}
+<section id="about" class="section about" aria-labelledby="about-title">
+  <h2 id="about-title" class="visually-hidden">{{ include.title | escape }}</h2>
+  <div class="about__bio">
+    {%- for paragraph in profile.bio %}
+    {{ paragraph | markdownify }}
+    {%- endfor %}
+  </div>
+  {%- if profile.status %}
+  <div class="status">
+    <p class="status__label">{{ profile.status.label | escape }}</p>
+    <p class="status__text">
+      {{ profile.status.text | escape }}
+      <a href="mailto:{{ profile.email | escape }}">Get in touch</a>{% if profile.cv %} or <a href="{{ profile.cv | relative_url }}">read my CV</a>{% endif %}.
+    </p>
+  </div>
+  {%- endif %}
+  {%- if profile.interests %}
+  <ul class="tags" aria-label="Research interests">
+    {%- for interest in profile.interests %}
+    <li>{{ interest | escape }}</li>
+    {%- endfor %}
+  </ul>
+  {%- endif %}
+</section>

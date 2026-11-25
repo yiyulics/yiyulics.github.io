@@ -1,0 +1,74 @@
+# Papers, in display order.
+#
+#   title, authors      required
+#   venue               badge text, e.g. "ICCV 2025". Omit for work under review.
+#   under_review: true  shows an "Under Review" badge instead of a venue.
+#                       Venues of double-blind submissions are deliberately not named here.
+#   summary             one or two sentences
+#   image               teaser shown in the 20:9 tile (cropped to fill); put files in images/pubs/
+#   image_full          optional larger image opened when the teaser is clicked
+#   motif               drawing used when there is no teaser yet: modes | facets | exposure
+#   links               list of {label, url}; the first one is also the title link
+#   scholar_id          Google Scholar publication id, enables the "Cited by N" counter
+
+- title: "Mass Forcing: On-Policy Mass-Aware Distillation for Autoregressive Video Diffusion"
+  authors: [Yiyu Li, Fei Wei, Yong Wang, Gerhard Petrus Hancke, Rynson W.H. Lau]
+  under_review: true
+  motif: modes
+  summary: >-
+    Counters mode-seeking in few-step autoregressive video generation by estimating
+    teacher-to-student density ratios and upweighting underrepresented modes during distillation,
+    with no inference-time overhead.
+
+- title: "FACET: Estimating High-Fidelity Surface Normals in Latent Normal Space"
+  authors: [Yiyu Li, Haoyuan Wang, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau]
+  under_review: true
+  motif: facets
+  summary: >-
+    A monocular surface-normal estimator built on NormalVAE, which decouples low-frequency semantics
+    from high-frequency geometric residuals to avoid the detail loss of RGB-pretrained autoencoders.
+
+- title: "SeHDR: Single-Exposure HDR Novel View Synthesis via 3D Gaussian Bracketing"
+  authors: [Yiyu Li, Haoyuan Wang, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau]
+  venue: ICCV 2025
+  image: /images/pubs/sehdr.webp
+  image_full: /images/sehdr.jpg
+  image_alt: SeHDR teaser showing renderings of two captured scenes
+  summary: >-
+    The first 3D Gaussian Splatting framework for HDR novel view synthesis from single-exposure
+    captures, using bracketed 3D Gaussians fused by a differentiable Neural Exposure Fusion module.
+  links:
+    - label: arXiv
+      url: https://arxiv.org/abs/2509.20400
+    - label: Paper
+      url: https://openaccess.thecvf.com/content/ICCV2025/html/Li_SEHDR_Single-Exposure_HDR_Novel_View_Synthesis_via_3D_Gaussian_Bracketing_ICCV_2025_paper.html
+    - label: Code
+      url: https://github.com/yiyulics/SeHDR
+  scholar_id: "SXOMocYAAAAJ:UeHWp8X0CEIC"
+
+- title: "Dense Exposure Sampling Matters for Low-light Image Enhancement"
+  authors: [Yiyu Li, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau]
+  under_review: true
+  motif: exposure
+  summary: >-
+    Restores normally exposed images from low-light inputs via dense exposure sampling in a
+    self-reconstruction pipeline, with strong out-of-distribution generalization from small-scale
+    normal-light data.
+
+- title: "Color Shift Estimation-and-Correction for Image Enhancement"
+  authors: [Yiyu Li, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau]
+  venue: CVPR 2024
+  image: /images/pubs/csec.webp
+  image_full: /images/pca.jpg
+  image_alt: PCA plots of under-exposed, over-exposed, and normal-exposed pixels
+  summary: >-
+    Corrects over- and under-exposed regions of the same image by separately estimating and
+    correcting their opposing color shifts with a modified deformable convolution.
+  links:
+    - label: arXiv
+      url: https://arxiv.org/abs/2405.17725
+    - label: Paper
+      url: https://openaccess.thecvf.com/content/CVPR2024/html/Li_Color_Shift_Estimation-and-Correction_for_Image_Enhancement_CVPR_2024_paper.html
+    - label: Code
+      url: https://github.com/yiyulics/CSEC
+  scholar_id: "SXOMocYAAAAJ:9yKSN-GCB0IC"

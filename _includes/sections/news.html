@@ -1,0 +1,28 @@
+{%- assign news = site.data.news -%}
+{%- assign visible = news.visible | default: 5 %}
+<section id="news" class="section" aria-labelledby="news-title">
+  <div class="section__head">
+    <h2 id="news-title" class="section__title">{{ include.title | escape }}</h2>
+  </div>
+  <ul class="rows">
+    {%- for item in news.entries limit: visible %}
+    <li class="row">
+      <span class="row__date">{{ item.date | escape }}</span>
+      <span class="row__body">{{ item.text | markdownify | remove: "<p>" | remove: "</p>" | strip }}</span>
+    </li>
+    {%- endfor %}
+  </ul>
+  {%- if news.entries.size > visible %}
+  <details class="fold">
+    <summary><span>Earlier news</span></summary>
+    <ul class="rows">
+      {%- for item in news.entries offset: visible %}
+      <li class="row">
+        <span class="row__date">{{ item.date | escape }}</span>
+        <span class="row__body">{{ item.text | markdownify | remove: "<p>" | remove: "</p>" | strip }}</span>
+      </li>
+      {%- endfor %}
+    </ul>
+  </details>
+  {%- endif %}
+</section>

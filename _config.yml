@@ -1,163 +1,53 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your entire site, values
-# which you are expected to set up once and rarely need to edit after that.
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# `jekyll serve`. If you change this file, please restart the server process.
+# Site-wide settings. Page content lives in _data/*.yml (see README.md).
+# This file is not reloaded by `jekyll serve`; restart the server after editing it.
 
-# Site Settings
-title                    : "Yiyu Li"
-description              : ""
-repository               : "yiyulics/yiyulics.github.io"
-google_scholar_stats_use_cdn : true
+title: "Yiyu Li"
+tagline: "Ph.D. Candidate in Computer Science, City University of Hong Kong"
+description: >-
+  Yiyu Li is a final-year Ph.D. candidate in Computer Science at the City University of Hong Kong,
+  working on world models, video generation, and Sim2Real2Sim.
+url: "https://yiyulics.github.io"
+baseurl: ""
+lang: "en"
+theme: null   # no gem theme: layouts and styles live in this repository
 
-# google analytics
-google_analytics_id      :  # get google_analytics_id from https://analytics.google.com/analytics/
+# Google Scholar citation counts are crawled daily by .github/workflows/google_scholar_crawler.yaml
+# into the `google-scholar-stats` branch of this repository and read by the page at runtime.
+repository: "yiyulics/yiyulics.github.io"
+google_scholar_stats_use_cdn: true
 
-# SEO Related
-google_site_verification :  # get google_site_verification from https://search.google.com/search-console/about
-bing_site_verification   :  # get bing_site_verification from https://www.bing.com/webmasters/about
-baidu_site_verification  :  # get baidu_site_verification from https://ziyuan.baidu.com/login/index?u=/site/index
+# Optional integrations; leave empty to disable.
+google_analytics_id:
+google_site_verification:
+bing_site_verification:
+baidu_site_verification:
 
-# Site Author
-author:
-  name             : "Yiyu Li"
-  avatar           : "images/avatar-android-chrome-512x512.png"
-  bio              : "CS PhD @ CityU"
-  location         : "Hong Kong"
-  employer         :
-  pubmed           : 
-  googlescholar    : "https://scholar.google.com/citations?user=SXOMocYAAAAJ&hl=en"
-  email            : "yiyuli.cs@gmail.com"
-  researchgate     :  # e.g., "https://www.researchgate.net/profile/yourprofile"
-  uri              :
-  bitbucket        :
-  codepen          :
-  dribbble         :
-  flickr           :
-  facebook         :
-  foursquare       :
-  github           : "yiyulics"
-  google_plus      :
-  keybase          :
-  instagram        :
-  impactstory      : # e.g., "https://profiles.impactstory.org/u/xxxx-xxxx-xxxx-xxxx"
-  lastfm           :
-  linkedin         : "yiyu-li-cs"
-  dblp             : "https://dblp.org/pid/141/1682.html"
-  orcid            : "https://orcid.org/0009-0000-8264-8086"
-  pinterest        :
-  soundcloud       :
-  stackoverflow    : # http://stackoverflow.com/users/123456/username
-  steam            :
-  tumblr           :
-  twitter          : 
-  vine             :
-  weibo            :
-  xing             :
-  youtube          :
-  wikipedia        :
-
-
-# Reading Files
-include:
-  - .htaccess
-  - _pages
-  - files
-exclude:
-  - docs
-  - google_scholar_crawler
-  - "*.sublime-project"
-  - "*.sublime-workspace"
-  - .asset-cache
-  - .bundle
-  - .jekyll-assets-cache
-  - .sass-cache
-  - .github
-  - CHANGELOG
-  - Capfile
-  - Gemfile
-  - Gruntfile.js
-  - LICENSE
-  - README
-  - Rakefile
-  - assets/js/_main.js
-  - assets/js/plugins
-  - assets/js/vendor
-  - config
-  - gulpfile.js
-  - log
-  - node_modules
-  - package.json
-  - tmp
-  - vendor
-keep_files:
-  - .git
-  - .svn
+timezone: Asia/Hong_Kong
 encoding: "utf-8"
-markdown_ext: "markdown,mkdown,mkdn,mkd,md"
 
-
-# Conversion
 markdown: kramdown
-highlighter: rouge
-lsi: false
-excerpt_separator: "\n\n"
-incremental: false
-
-
-# Markdown Processing
 kramdown:
   input: GFM
   hard_wrap: false
-  auto_ids: true
-  footnote_nr: 1
-  entity_output: as_char
-  toc_levels: 1..6
   smart_quotes: lsquo,rsquo,ldquo,rdquo
-  enable_coderay: false
 
-# Defaults
-defaults:
-  # _pages
-  - scope:
-      path: ""
-      type: pages
-    values:
-      layout: default
-      author_profile: true
-
-
-# Sass/SCSS
-sass:
-  sass_dir: _sass
-  style: compressed # http://sass-lang.com/documentation/file.SASS_REFERENCE.html#output_style
-
-
-# Outputting
-permalink: /:categories/:title/
-timezone: Asia/Shanghai # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-
-
-# Plugins
 plugins:
-  - jekyll-paginate
-  - jekyll-sitemap
-  - jekyll-gist
-  - jekyll-feed
   - jekyll-redirect-from
-# mimic GitHub Pages with --safe
-whitelist:
-  - jekyll-paginate
   - jekyll-sitemap
-  - jekyll-gist
-  - jekyll-feed
-  - jemoji
 
-
-# HTML Compression
-# - http://jch.penibelst.de/
-compress_html:
-  clippings: all
-  ignore:
-    envs: development
+include:
+  - files
+exclude:
+  - README.md
+  - LICENSE
+  - Gemfile
+  - Gemfile.lock
+  - run_server.sh
+  - scripts
+  - google_scholar_crawler
+  - crop.py
+  - merge.py
+  - resize.py
+  - node_modules
+  - vendor
+  - .github

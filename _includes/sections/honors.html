@@ -1,0 +1,13 @@
+<section id="honors" class="section" aria-labelledby="honors-title">
+  <div class="section__head">
+    <h2 id="honors-title" class="section__title">{{ include.title | escape }}</h2>
+  </div>
+  <ul class="rows">
+    {%- for honor in site.data.honors %}
+    <li class="row">
+      <span class="row__date">{{ honor.year | escape }}</span>
+      <span class="row__body">{{ honor.title | escape }}{% if honor.org %}<span class="row__org">, {{ honor.org | escape }}</span>{% endif %}</span>
+    </li>
+    {%- endfor %}
+  </ul>
+</section>

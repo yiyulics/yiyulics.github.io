@@ -1,0 +1,34 @@
+{%- assign service = site.data.service %}
+<section id="service" class="section" aria-labelledby="service-title">
+  <div class="section__head">
+    <h2 id="service-title" class="section__title">{{ include.title | escape }}</h2>
+  </div>
+  <ul class="rows">
+    {%- if service.conferences %}
+    <li class="row">
+      <span class="row__date">Conference reviewer</span>
+      <ul class="row__body venues">
+        {%- for venue in service.conferences %}
+        <li>{{ venue.name | escape }} <span>{{ venue.years | escape }}</span></li>
+        {%- endfor %}
+      </ul>
+    </li>
+    {%- endif %}
+    {%- if service.journals %}
+    <li class="row">
+      <span class="row__date">Journal reviewer</span>
+      <ul class="row__body venues">
+        {%- for journal in service.journals %}
+        <li>{{ journal | escape }}</li>
+        {%- endfor %}
+      </ul>
+    </li>
+    {%- endif %}
+    {%- for item in service.teaching %}
+    <li class="row">
+      <span class="row__date">{{ item.period | escape }}</span>
+      <span class="row__body">{{ item.role | escape }}, {{ item.school | escape }}<span class="row__org"> — {{ item.courses | escape }}</span></span>
+    </li>
+    {%- endfor %}
+  </ul>
+</section>

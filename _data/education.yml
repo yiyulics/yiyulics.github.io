@@ -1,0 +1,15 @@
+# Degrees, newest first. `note` supports Markdown.
+
+- school: City University of Hong Kong
+  degree: Ph.D. in Computer Science
+  period: 2022.08 – 2027.08
+  period_note: expected
+  location: Hong Kong SAR
+  note: >-
+    Advised by Prof. [Rynson W.H. Lau](https://www.cs.cityu.edu.hk/~rynson/) and
+    Prof. [Gerhard Petrus Hancke](https://scholars.cityu.edu.hk/en/persons/gerhard-petrus-hancke).
+
+- school: Harbin Institute of Technology
+  degree: B.Eng. in Computer Science and Technology
+  period: 2016.08 – 2020.07
+  location: Harbin, China

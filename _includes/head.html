@@ -1,19 +1,72 @@
-<meta charset="utf-8">
+{%- assign profile = site.data.profile -%}
+{%- if page.title -%}
+  {%- assign page_title = page.title | append: " · " | append: site.title -%}
+{%- else -%}
+  {%- assign page_title = site.title | append: " — " | append: site.tagline -%}
+{%- endif -%}
+{%- assign page_description = page.description | default: site.description | strip_newlines | escape -%}
+{%- assign card = "/images/og-card.jpg" | absolute_url %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title | escape }}</title>
+    <meta name="description" content="{{ page_description }}">
+    <meta name="author" content="{{ profile.name | escape }}">
+    <link rel="canonical" href="{{ page.url | absolute_url }}">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#fafafb">
 
-{% include seo.html %}
+    <meta property="og:type" content="profile">
+    <meta property="og:site_name" content="{{ site.title | escape }}">
+    <meta property="og:title" content="{{ page_title | escape }}">
+    <meta property="og:description" content="{{ page_description }}">
+    <meta property="og:url" content="{{ page.url | absolute_url }}">
+    <meta property="og:image" content="{{ card }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    {%- if site.google_site_verification %}
+    <meta name="google-site-verification" content="{{ site.google_site_verification }}">
+    {%- endif -%}
+    {%- if site.bing_site_verification %}
+    <meta name="msvalidate.01" content="{{ site.bing_site_verification }}">
+    {%- endif -%}
+    {%- if site.baidu_site_verification %}
+    <meta name="baidu-site-verification" content="{{ site.baidu_site_verification }}">
+    {%- endif %}
 
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+      /* Apply a saved theme before first paint; without one the system preference is used. */
+      try {
+        var saved = localStorage.getItem("theme");
+        if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+      } catch (e) {}
+    </script>
+    <link rel="preload" href="{{ '/assets/fonts/geist-latin-wght-normal.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ '/assets/fonts/newsreader-latin-wght-normal.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 
-<script>
-  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
-</script>
+    <link rel="icon" href="{{ '/images/favicon.ico' | relative_url }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ '/images/favicon-32x32.png' | relative_url }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ '/images/favicon-16x16.png' | relative_url }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ '/images/apple-touch-icon.png' | relative_url }}">
+    <link rel="manifest" href="{{ '/images/site.webmanifest' | relative_url }}">
 
-<!-- For all browsers -->
-<link rel="stylesheet" href="assets/css/main.css">
-
-<meta http-equiv="cleartype" content="on">
-<head>
-  <base target="_blank">
-</head>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": {{ profile.name | jsonify }},
+        "url": {{ "/" | absolute_url | jsonify }},
+        "image": {{ "/images/avatar-android-chrome-512x512.png" | absolute_url | jsonify }},
+        "email": {{ profile.email | prepend: "mailto:" | jsonify }},
+        "jobTitle": {{ profile.role | jsonify }},
+        "description": {{ site.description | strip_newlines | jsonify }},
+        "affiliation": { "@type": "CollegeOrUniversity", "name": {{ profile.affiliation | jsonify }} },
+        "sameAs": [
+          {%- assign web_links = profile.links | where_exp: "link", "link.icon != 'mail'" -%}
+          {%- for link in web_links %}
+          {{ link.url | jsonify }}{% unless forloop.last %},{% endunless %}
+          {%- endfor %}
+        ]
+      }
+    </script>

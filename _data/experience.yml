@@ -1,0 +1,67 @@
+# Research experience, newest first.
+# `org_url`, `unit`, `location`, `mentors` and `points` are optional; `points` support Markdown.
+
+- org: Alibaba Amap
+  role: Research Intern
+  period: 2026.03 – Present
+  mentors:
+    - name: Yong Wang
+      url: https://scholar.google.com/citations?user=rAtlzLcAAAAJ&hl=zh-CN
+    - name: Xiangxiang Chu
+      url: https://cxxgtxy.github.io/
+  points:
+    - Research post-training methods for autoregressive video generation, using distribution matching distillation (DMD) to train few-step video diffusion models.
+    - Developed Mass Forcing, which uses teacher-to-student density ratios to reweight distillation toward underrepresented modes.
+    - Explore agentic approaches to video generation.
+
+- org: Shanghai AI Laboratory
+  unit: Embodied AI Center
+  role: Research Intern
+  period: 2025.06 – 2026.03
+  location: Shanghai, China
+  mentors:
+    - name: Zhaoyang Lyu
+      url: https://zhaoyanglyu.github.io/
+    - name: Jiangmiao Pang
+      url: https://oceanpang.github.io/
+  points:
+    - Led the texture generation component of a large-scale articulation generation project.
+    - Investigated and evaluated state-of-the-art multiview-based and native texture generation methods.
+    - Developed new generation approaches, including code-based representations and AR-based and dLLM-based texture generation.
+
+- org: Huawei Hong Kong Research Center
+  unit: 2012 Laboratories
+  role: Research Intern
+  period: 2024.12 – 2025.06
+  location: Hong Kong
+  mentors:
+    - name: Lin Koon Wing Macgyver
+      url: https://www.linkedin.com/in/mac-lin-5194b718/
+  points:
+    - Improved the performance of games (FPS, MOBA, RPG) on HarmonyOS by predicting touch events, reducing end-to-end latency by 6 to 20 ms.
+    - Reduced game package size by compressing textures and light maps with grid-based neural implicit compression, achieving a 60% higher compression ratio than conventional ASTC.
+
+- org: Baidu Research
+  org_url: https://research.baidu.com/
+  unit: Cognitive Computing Lab
+  role: Research Intern
+  period: 2020.06 – 2021.01
+  location: Beijing, China
+  mentors:
+    - name: Ping Li
+      url: https://pltrees.github.io/
+  points:
+    - Built an end-to-end converter that translates natural language into a newly defined graph structure founded on predicate logic.
+    - Developed an automated open-domain information extraction system on top of this converter.
+
+- org: Massachusetts Institute of Technology
+  unit: IEEE UV Program
+  unit_url: https://universalvillage.org/
+  role: Member
+  period: 2019.07 – 2019.08
+  location: Boston, USA
+  mentors:
+    - name: Yajun Fang
+  points:
+    - Contributed to the Universal Village (UV) initiative, a smart-cities framework pursuing harmony between humans and nature through the integration of technologies.
+    - Conducted research and project development on intelligent transportation and urban management systems.
