@@ -694,6 +694,9 @@
     showStyle(first.style || initial);
     stylePicker.hidden = false;
     hints.forEach(hint => { hint.hidden = false; });
+    // the caption turns from a description of the still picture into how to use the live one
+    figure.querySelectorAll("[data-world-still]").forEach(note => { note.hidden = true; });
+    figure.querySelectorAll("[data-world-turns]").forEach(note => { note.hidden = !turns(); });
     if (controls) controls.hidden = false;
     showLines(lines.length);
 

@@ -45,5 +45,14 @@
       <span class="world__frame" data-world-elapsed>shutter +0.0 s</span>
     </div>
   </div>
-  <figcaption class="world__caption">A small world model starring me at the beach. One program animates the wind and tide in all three styles.<span data-world-hint hidden> Drag the picture to look around; <span class="world__click">click</span><span class="world__tap">tap</span> the portrait to wave.</span></figcaption>
+  <figcaption class="world__caption">
+    <span data-world-still>A small world model starring me at the beach. One program draws the scene in all three styles.</span>
+    {%- comment %} How to use the live figure: a symbol for the gesture, a word for what it does. {% endcomment %}
+    <span class="world__keys" data-world-hint hidden>
+      <span class="world__key" data-world-turns>{% include icon.html name="drag" %}<span class="visually-hidden">Drag the picture to </span>look around</span>
+      <span class="world__key">{% include icon.html name="pointer" %}<span class="visually-hidden">Click the portrait to </span>wave</span>
+      <span class="world__key"><span class="world__sample" aria-hidden="true">0.30</span><span class="visually-hidden">Numbers in the code: </span>drag</span>
+      <span class="world__key"><span class="world__sample" aria-hidden="true">rgb</span><span class="visually-hidden">Words in the code: </span><span class="world__click">click</span><span class="world__tap">tap</span></span>
+    </span>
+  </figcaption>
 </figure>
