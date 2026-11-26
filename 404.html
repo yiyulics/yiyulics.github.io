@@ -4,9 +4,21 @@ title: Page not found
 permalink: /404.html
 sitemap: false
 ---
-<section class="section">
-  <div class="section__head">
-    <h2 class="section__title">Page not found</h2>
+<section class="lost">
+  <div class="container">
+    <p class="label">Error 404</p>
+    <h1 class="lost__title">This page is not part of the world yet.</h1>
+    <p class="lost__text">The address may be mistyped, or the page may have moved when the site was rebuilt. Everything now lives on the homepage.</p>
+    <p class="lost__code" data-lost hidden></p>
+    <a class="button button--primary" href="{{ '/' | relative_url }}"><span>Back to the homepage</span></a>
   </div>
-  <p>This page does not exist. <a href="{{ '/' | relative_url }}">Back to the homepage</a>.</p>
 </section>
+<script>
+  /* Show the address that was asked for, in the manner of the hero figure. */
+  (function () {
+    var line = document.querySelector("[data-lost]");
+    if (!line) return;
+    line.textContent = 'scene.find("' + location.pathname.slice(0, 80) + '")  # None';
+    line.hidden = false;
+  })();
+</script>

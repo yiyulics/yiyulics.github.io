@@ -5,7 +5,7 @@ title: "Yiyu Li"
 tagline: "Ph.D. Candidate in Computer Science, City University of Hong Kong"
 description: >-
   Yiyu Li is a final-year Ph.D. candidate in Computer Science at the City University of Hong Kong,
-  working on world models, video generation, and Sim2Real2Sim.
+  working on coding agents, world models, and video generation.
 url: "https://yiyulics.github.io"
 baseurl: ""
 lang: "en"
@@ -51,3 +51,11 @@ exclude:
   - node_modules
   - vendor
   - .github
+  # source images kept for crop.py / merge.py / resize.py, not used by any page (7 MB)
+  - images/origin_sehdr.jpg
+  - images/ours_lc_001_2.jpg
+  - images/singlehdr_lc_001_2.jpg
+  - images/500x300.png
+  - images/pca_500x219.jpg
+  - images/pca_500x300.jpg
+  - images/avatar-android-chrome-512x512.png

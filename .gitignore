@@ -6,3 +6,4 @@ vendor/
 push.sh
 .DS_Store
 __pycache__/
+_world-candidates/

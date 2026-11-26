@@ -1,8 +1,12 @@
 # Research experience, newest first.
+# `focus` is the one-line summary that is always visible; `points` fold under "Details".
 # `org_url`, `unit`, `location`, `mentors` and `points` are optional; `points` support Markdown.
+# `logo` is optional: a square image in images/orgs/, shown in front of the organization's name.
 
 - org: Alibaba Amap
+  logo: /images/orgs/amap.png
   role: Research Intern
+  focus: Post-training and distillation for autoregressive video generation; agentic video generation.
   period: 2026.03 – Present
   mentors:
     - name: Yong Wang
@@ -15,8 +19,10 @@
     - Explore agentic approaches to video generation.
 
 - org: Shanghai AI Laboratory
+  logo: /images/orgs/shlab.png
   unit: Embodied AI Center
   role: Research Intern
+  focus: Texture generation for a large-scale articulated-object generation project.
   period: 2025.06 – 2026.03
   location: Shanghai, China
   mentors:
@@ -25,13 +31,15 @@
     - name: Jiangmiao Pang
       url: https://oceanpang.github.io/
   points:
-    - Led the texture generation component of a large-scale articulation generation project.
+    - Led the texture generation component of a large-scale articulated-object generation project.
     - Investigated and evaluated state-of-the-art multiview-based and native texture generation methods.
     - Developed new generation approaches, including code-based representations and AR-based and dLLM-based texture generation.
 
 - org: Huawei Hong Kong Research Center
+  logo: /images/orgs/huawei.png
   unit: 2012 Laboratories
   role: Research Intern
+  focus: Touch-event prediction and neural texture compression for mobile games on HarmonyOS.
   period: 2024.12 – 2025.06
   location: Hong Kong
   mentors:
@@ -41,23 +49,12 @@
     - Improved the performance of games (FPS, MOBA, RPG) on HarmonyOS by predicting touch events, reducing end-to-end latency by 6 to 20 ms.
     - Reduced game package size by compressing textures and light maps with grid-based neural implicit compression, achieving a 60% higher compression ratio than conventional ASTC.
 
-- org: Baidu Research
-  org_url: https://research.baidu.com/
-  unit: Cognitive Computing Lab
-  role: Research Intern
-  period: 2020.06 – 2021.01
-  location: Beijing, China
-  mentors:
-    - name: Ping Li
-      url: https://pltrees.github.io/
-  points:
-    - Built an end-to-end converter that translates natural language into a newly defined graph structure founded on predicate logic.
-    - Developed an automated open-domain information extraction system on top of this converter.
-
 - org: Massachusetts Institute of Technology
+  logo: /images/orgs/mit.png
   unit: IEEE UV Program
   unit_url: https://universalvillage.org/
   role: Member
+  focus: Smart-city research on intelligent transportation and urban management.
   period: 2019.07 – 2019.08
   location: Boston, USA
   mentors:

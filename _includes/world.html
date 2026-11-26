@@ -1,0 +1,49 @@
+{%- comment -%}
+  The hero figure: a moment at the beach, written as a program that keeps running.
+  A scene in assets/js/scenes/ (one per art style) draws the picture; assets/js/world.js reads the
+  parameters below, keeps time, handles the controls and fetches the scene selected in the header.
+  The code shows the selected style. Its numbers are sliders and its other options are switches. Without JavaScript a still frame is shown.
+{%- endcomment %}
+{%- assign first_style = site.data.profile.hero.style | default: 'ascii' -%}
+{%- assign style_labels = 'ASCII,Pixel,Low-poly' | split: ',' -%}
+<figure class="world" data-world data-scenes="{{ '/assets/js/scenes/' | relative_url }}" data-version="{{ site.time | date: '%s' }}">
+  <div class="world__card">
+    <div class="world__bar">
+      <span class="world__file">{% include icon.html name="file" %}world.py</span>
+      <div class="world__styles" role="radiogroup" aria-labelledby="world-style-label" data-world-styles hidden>
+        <span id="world-style-label">Style</span>
+        <div class="world__choices">
+          {%- for label in style_labels %}
+          {%- assign value = label | downcase | remove: '-' %}
+          <label><input type="radio" name="world-style" value="{{ value }}"{% if value == first_style %} checked{% endif %}><span>{{ label }}</span></label>
+          {%- endfor %}
+        </div>
+      </div>
+    </div>
+    <pre class="world__code" tabindex="0"><code><span class="ln"><span class="c"># a moment at the beach<span data-world-hint hidden> · drag the numbers</span></span></span>
+<span class="ln" data-part="beach">scene = <span class="ctor">Beach</span>(hour=<span class="num" data-param="hour" data-label="hour of the day" data-min="0" data-max="24" data-step="0.1" data-wrap>13.2</span>, wind=<span class="num" data-param="wind" data-min="0" data-max="1" data-step="0.05">0.30</span>)</span>
+<span class="ln" data-part="sea">scene.add(<span class="ctor">Sea</span>(tide=<span class="num" data-param="tide" data-min="0" data-max="1" data-step="0.05">0.40</span>, swell=<span class="num" data-param="swell" data-min="0" data-max="1" data-step="0.05">0.50</span>),</span>
+<span class="ln" data-part="walkers">          <span class="ctor">Walkers</span>(<span class="num" data-param="walkers" data-min="0" data-max="5" data-step="1">2</span>))</span>
+<span class="ln" data-part="person">me = scene.add(<span class="ctor">Person</span>(hoodie="<span class="num num--switch" data-option="hoodie" data-values="charcoal,navy,forest,rust,sand">charcoal</span>",</span>
+<span class="ln" data-part="person">        glasses=<span class="num num--switch" data-option="glasses" data-values="True,False">True</span>, smile=<span class="num" data-param="smile" data-min="0" data-max="1" data-step="0.05">0.80</span>))</span>
+<span class="ln"> </span>
+<span class="ln"><span class="c"># one world, many renderers; let it run</span></span>
+<span class="ln">draw = <span class="ctor">Renderer</span>(style="<span data-world-style-value>{{ first_style }}</span>")</span>
+<span class="ln"><span class="k">for</span> t <span class="k">in</span> scene.rollout(fps=<span class="num" data-param="fps" data-label="frames per second" data-min="4" data-max="24" data-step="1">12</span>):</span>
+<span class="ln">    draw(t, view="<span class="num num--switch" data-option="view" data-label="render view" data-values="rgb,normal,depth,seg,wire">rgb</span>")</span></code></pre>
+    <div class="world__view">
+      <img class="world__still" src="{{ '/images/world.webp' | relative_url }}?v={{ site.time | date: '%s' }}" width="480" height="400" alt="A smiling young man at the beach, drawn in coloured characters beneath a sunny sky. A small sailboat crosses the water behind him.">
+      <canvas class="world__canvas" width="480" height="400" hidden role="img" aria-label="An animated portrait of {{ site.data.profile.name | escape }} at the beach. Use the arrow keys to lean the camera and press Enter to wave."></canvas>
+    </div>
+    <div class="world__timeline" data-world-controls hidden>
+      <button class="world__play" type="button" data-world-play aria-label="Let the scene run">
+        <span class="world__play-icon world__play-icon--pause">{% include icon.html name="pause" %}</span>
+        <span class="world__play-icon world__play-icon--play">{% include icon.html name="play" %}</span>
+      </button>
+      <div class="world__track" data-world-track aria-valuetext="13:12"><span class="world__thumb" data-world-thumb></span></div>
+      <span class="world__clock" data-world-clock>13:12</span>
+      <span class="world__frame" data-world-elapsed>shutter +0.0 s</span>
+    </div>
+  </div>
+  <figcaption class="world__caption">A small world model starring me at the beach. One program animates the wind and tide in all three styles.<span data-world-hint hidden> <span class="world__click">Click</span><span class="world__tap">Tap</span> the portrait to wave.</span></figcaption>
+</figure>

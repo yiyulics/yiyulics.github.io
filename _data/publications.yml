@@ -1,17 +1,24 @@
-# Papers, in display order.
+# Papers. Within each research direction they appear in the order listed here.
 #
+#   id                  short slug, used for the #pub-<id> anchor
+#   theme               id of a direction in research.yml
 #   title, authors      required
 #   venue               badge text, e.g. "ICCV 2025". Omit for work under review.
 #   under_review: true  shows an "Under Review" badge instead of a venue.
 #                       Venues of double-blind submissions are deliberately not named here.
-#   summary             one or two sentences
+#   summary             one sentence
 #   image               teaser shown in the 20:9 tile (cropped to fill); put files in images/pubs/
 #   image_full          optional larger image opened when the teaser is clicked
 #   motif               drawing used when there is no teaser yet: modes | facets | exposure
-#   links               list of {label, url}; the first one is also the title link
+#   links               list of {label, url}; the first one is also the title link.
+#                       Add `repo: owner/name` to a code link to show its GitHub stars.
+#   abstract            optional, shown behind an "Abstract" button
+#   bibtex              optional, shown behind a "BibTeX" button with a copy action
 #   scholar_id          Google Scholar publication id, enables the "Cited by N" counter
 
-- title: "Mass Forcing: On-Policy Mass-Aware Distillation for Autoregressive Video Diffusion"
+- id: mass-forcing
+  theme: worlds
+  title: "Mass Forcing: On-Policy Mass-Aware Distillation for Autoregressive Video Diffusion"
   authors: [Yiyu Li, Fei Wei, Yong Wang, Gerhard Petrus Hancke, Rynson W.H. Lau]
   under_review: true
   motif: modes
@@ -20,7 +27,9 @@
     teacher-to-student density ratios and upweighting underrepresented modes during distillation,
     with no inference-time overhead.
 
-- title: "FACET: Estimating High-Fidelity Surface Normals in Latent Normal Space"
+- id: facet
+  theme: 3d
+  title: "FACET: Estimating High-Fidelity Surface Normals in Latent Normal Space"
   authors: [Yiyu Li, Haoyuan Wang, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau]
   under_review: true
   motif: facets
@@ -28,7 +37,9 @@
     A monocular surface-normal estimator built on NormalVAE, which decouples low-frequency semantics
     from high-frequency geometric residuals to avoid the detail loss of RGB-pretrained autoencoders.
 
-- title: "SeHDR: Single-Exposure HDR Novel View Synthesis via 3D Gaussian Bracketing"
+- id: sehdr
+  theme: 3d
+  title: "SeHDR: Single-Exposure HDR Novel View Synthesis via 3D Gaussian Bracketing"
   authors: [Yiyu Li, Haoyuan Wang, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau]
   venue: ICCV 2025
   image: /images/pubs/sehdr.webp
@@ -44,9 +55,37 @@
       url: https://openaccess.thecvf.com/content/ICCV2025/html/Li_SEHDR_Single-Exposure_HDR_Novel_View_Synthesis_via_3D_Gaussian_Bracketing_ICCV_2025_paper.html
     - label: Code
       url: https://github.com/yiyulics/SeHDR
+      repo: yiyulics/SeHDR
   scholar_id: "SXOMocYAAAAJ:UeHWp8X0CEIC"
+  abstract: >-
+    This paper presents SeHDR, a novel high dynamic range 3D Gaussian Splatting (HDR-3DGS) approach
+    for generating HDR novel views given multi-view LDR images. Unlike existing methods that
+    typically require the multi-view LDR input images to be captured from different exposures, which
+    are tedious to capture and more likely to suffer from errors (e.g., object motion blurs and
+    calibration/alignment inaccuracies), our approach learns the HDR scene representation from
+    multi-view LDR images of a single exposure. Our key insight to this ill-posed problem is that by
+    first estimating Bracketed 3D Gaussians (i.e., with different exposures) from single-exposure
+    multi-view LDR images, we may then be able to merge these bracketed 3D Gaussians into an HDR
+    scene representation. Specifically, SeHDR first learns base 3D Gaussians from single-exposure
+    LDR inputs, where the spherical harmonics parameterize colors in a linear color space. We then
+    estimate multiple 3D Gaussians with identical geometry but varying linear colors conditioned on
+    exposure manipulations. Finally, we propose the Differentiable Neural Exposure Fusion (NeEF) to
+    integrate the base and estimated 3D Gaussians into HDR Gaussians for novel view rendering.
+    Extensive experiments demonstrate that SeHDR outperforms existing methods as well as carefully
+    designed baselines.
+  bibtex: |
+    @InProceedings{Li_2025_ICCV,
+        author    = {Li, Yiyu and Wang, Haoyuan and Xu, Ke and Hancke, Gerhard Petrus and Lau, Rynson W.H.},
+        title     = {SeHDR: Single-Exposure HDR Novel View Synthesis via 3D Gaussian Bracketing},
+        booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+        month     = {October},
+        year      = {2025},
+        pages     = {26045-26054}
+    }
 
-- title: "Dense Exposure Sampling Matters for Low-light Image Enhancement"
+- id: dense-exposure
+  theme: imaging
+  title: "Dense Exposure Sampling Matters for Low-light Image Enhancement"
   authors: [Yiyu Li, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau]
   under_review: true
   motif: exposure
@@ -55,7 +94,9 @@
     self-reconstruction pipeline, with strong out-of-distribution generalization from small-scale
     normal-light data.
 
-- title: "Color Shift Estimation-and-Correction for Image Enhancement"
+- id: csec
+  theme: imaging
+  title: "Color Shift Estimation-and-Correction for Image Enhancement"
   authors: [Yiyu Li, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau]
   venue: CVPR 2024
   image: /images/pubs/csec.webp
@@ -71,4 +112,31 @@
       url: https://openaccess.thecvf.com/content/CVPR2024/html/Li_Color_Shift_Estimation-and-Correction_for_Image_Enhancement_CVPR_2024_paper.html
     - label: Code
       url: https://github.com/yiyulics/CSEC
+      repo: yiyulics/CSEC
   scholar_id: "SXOMocYAAAAJ:9yKSN-GCB0IC"
+  abstract: >-
+    Images captured under sub-optimal illumination conditions may contain both over- and
+    under-exposures. Current approaches mainly focus on adjusting image brightness, which may
+    exacerbate the color tone distortion in under-exposed areas and fail to restore accurate colors
+    in over-exposed regions. We observe that over- and under-exposed regions display opposite color
+    tone distribution shifts with respect to each other, which may not be easily normalized in joint
+    modeling as they usually do not have "normal-exposed" regions/pixels as reference. In this paper,
+    we propose a novel method to enhance images with both over- and under-exposures by learning to
+    estimate and correct such color shifts. Specifically, we first derive the color feature maps of
+    the brightened and darkened versions of the input image via a UNet-based network, followed by a
+    pseudo-normal feature generator to produce pseudo-normal color feature maps. We then propose a
+    novel COlor Shift Estimation (COSE) module to estimate the color shifts between the derived
+    brightened (or darkened) color feature maps and the pseudo-normal color feature maps. The COSE
+    module corrects the estimated color shifts of the over- and under-exposed regions separately. We
+    further propose a novel COlor MOdulation (COMO) module to modulate the separately corrected
+    colors in the over- and under-exposed regions to produce the enhanced image. Comprehensive
+    experiments show that our method outperforms existing approaches.
+  bibtex: |
+    @InProceedings{Li_2024_CVPR,
+        author    = {Li, Yiyu and Xu, Ke and Hancke, Gerhard Petrus and Lau, Rynson W.H.},
+        title     = {Color Shift Estimation-and-Correction for Image Enhancement},
+        booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+        month     = {June},
+        year      = {2024},
+        pages     = {25389-25398}
+    }

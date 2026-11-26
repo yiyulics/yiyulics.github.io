@@ -1,38 +1,81 @@
 <section id="experience" class="section" aria-labelledby="experience-title">
-  <div class="section__head">
-    <h2 id="experience-title" class="section__title">{{ include.title | escape }}</h2>
-  </div>
-  <ol class="rows rows--entries">
-    {%- for job in site.data.experience %}
-    <li class="row">
-      <p class="row__date">{{ job.period | escape }}</p>
-      <div class="row__body">
-        <h3 class="entry__title">
-          {%- if job.org_url %}<a href="{{ job.org_url | escape }}">{{ job.org | escape }}</a>{% else %}{{ job.org | escape }}{% endif -%}
-          {%- if job.unit %}<span class="entry__unit">, {% if job.unit_url %}<a href="{{ job.unit_url | escape }}">{{ job.unit | escape }}</a>{% else %}{{ job.unit | escape }}{% endif %}</span>{% endif -%}
-        </h3>
-        <p class="entry__meta">
-          <span>{{ job.role | escape }}</span>
-          {% if job.location %}<span>{{ job.location | escape }}</span>{% endif %}
-          {% if job.mentors -%}
-          <span>
-            {%- if job.mentors.size > 1 %}Mentors: {% else %}Mentor: {% endif -%}
-            {%- for mentor in job.mentors -%}
-            {%- if mentor.url %}<a href="{{ mentor.url | escape }}">{{ mentor.name | escape }}</a>{% else %}{{ mentor.name | escape }}{% endif -%}
-            {%- unless forloop.last %}, {% endunless -%}
-            {%- endfor -%}
-          </span>
-          {%- endif %}
-        </p>
-        {%- if job.points %}
-        <ul class="entry__points">
-          {%- for point in job.points %}
-          <li>{{ point | markdownify | remove: "<p>" | remove: "</p>" | strip }}</li>
+  <div class="container">
+    <header class="section__head">
+      <h2 id="experience-title" class="section__title">{{ include.title | escape }}</h2>
+    </header>
+    <div class="xp">
+      <ol class="timeline">
+        {%- for job in site.data.experience %}
+        <li class="job{% if job.logo %} job--logo{% endif %}">
+          <p class="job__when">{{ job.period | escape }}</p>
+          <div class="job__body">
+            {%- if job.logo %}
+            <img class="job__logo" src="{{ job.logo | relative_url }}?v={{ site.time | date: '%s' }}" alt="" width="28" height="28" loading="lazy" decoding="async">
+            {%- endif %}
+            <h3 class="job__org">
+              {%- if job.org_url %}<a href="{{ job.org_url | escape }}">{{ job.org | escape }}</a>{% else %}{{ job.org | escape }}{% endif -%}
+              {%- if job.unit %}<span class="job__unit">, {% if job.unit_url %}<a href="{{ job.unit_url | escape }}">{{ job.unit | escape }}</a>{% else %}{{ job.unit | escape }}{% endif %}</span>{% endif -%}
+            </h3>
+            <p class="meta">
+              <span>{{ job.role | escape }}</span>
+              {% if job.location %}<span>{{ job.location | escape }}</span>{% endif %}
+              {% if job.mentors -%}
+              <span>
+                {%- if job.mentors.size > 1 %}Mentors: {% else %}Mentor: {% endif -%}
+                {%- for mentor in job.mentors -%}
+                {%- if mentor.url %}<a href="{{ mentor.url | escape }}">{{ mentor.name | escape }}</a>{% else %}{{ mentor.name | escape }}{% endif -%}
+                {%- unless forloop.last %}, {% endunless -%}
+                {%- endfor -%}
+              </span>
+              {%- endif %}
+            </p>
+            {%- if job.focus %}
+            <p class="job__focus">{{ job.focus | escape }}</p>
+            {%- endif %}
+            {%- if job.points %}
+            <details class="job__details"{% if forloop.first %} open{% endif %}>
+              <summary><span>Details</span></summary>
+              <ul>
+                {%- for point in job.points %}
+                <li>{{ point | markdownify | remove: "<p>" | remove: "</p>" | strip }}</li>
+                {%- endfor %}
+              </ul>
+            </details>
+            {%- endif %}
+          </div>
+        </li>
+        {%- endfor %}
+      </ol>
+      <aside class="side" aria-labelledby="education-title">
+        <h3 id="education-title" class="label">Education</h3>
+        <ul class="side__list">
+          {%- for item in site.data.education %}
+          <li{% if item.logo %} class="side__item--logo"{% endif %}>
+            {%- if item.logo %}
+            <img class="side__logo" src="{{ item.logo | relative_url }}?v={{ site.time | date: '%s' }}" alt="" width="28" height="28" loading="lazy" decoding="async">
+            {%- endif %}
+            <p class="side__when">{{ item.period | escape }}{% if item.period_note %} ({{ item.period_note | escape }}){% endif %}</p>
+            <p class="side__title">{{ item.school | escape }}</p>
+            <p class="side__text">{{ item.degree | escape }}</p>
+            {%- if item.note %}
+            <p class="side__text">{{ item.note | markdownify | remove: "<p>" | remove: "</p>" | strip }}</p>
+            {%- endif %}
+          </li>
+          {%- endfor %}
+        </ul>
+        {%- if site.data.service.teaching %}
+        <h3 class="label">Teaching</h3>
+        <ul class="side__list">
+          {%- for item in site.data.service.teaching %}
+          <li>
+            <p class="side__when">{{ item.period | escape }}</p>
+            <p class="side__title">{{ item.role | escape }}, {{ item.school | escape }}</p>
+            <p class="side__text">{{ item.courses | escape }}</p>
+          </li>
           {%- endfor %}
         </ul>
         {%- endif %}
-      </div>
-    </li>
-    {%- endfor %}
-  </ol>
+      </aside>
+    </div>
+  </div>
 </section>

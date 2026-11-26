@@ -26,6 +26,7 @@ perl -0777 -i -pe '
   s/\\newcommand\{\\phone\}\{[^}]*\}/\\newcommand{\\phone}{}/;
   s/\n[ \t]*\\phone[ \t]*\n[ \t]*\\hspace\{[^}]*\}\\textcolor\{accent\}\{\\textperiodcentered\}\\hspace\{[^}]*\}//;
   s/\{Submitted to [^}]*\}/{Under Review}/g;
+  s/\bSim2Real2Sim\b/coding agents/gi;
   s/ and submitted the paper to [A-Za-z ]+\d{4}\./ (paper under review)./g;
 ' "$tmp/cv.tex"
 

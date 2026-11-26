@@ -1,0 +1,37 @@
+{%- assign profile = site.data.profile %}
+<section id="contact" class="section" aria-labelledby="contact-title">
+  <div class="container">
+    <div class="contact">
+      <div class="contact__lead">
+        <h2 id="contact-title" class="contact__title">{{ include.title | escape }}</h2>
+        {%- if profile.status %}
+        <p class="status"><strong class="status__label">{{ profile.status.label | escape }}</strong> <span>{{ profile.status.text | escape }}</span></p>
+        {%- endif %}
+        {%- if profile.contact.text %}
+        <p class="contact__text">{{ profile.contact.text | escape }}</p>
+        {%- endif %}
+      </div>
+      <div class="contact__ways">
+        <p class="contact__email">
+          <a href="mailto:{{ profile.email | escape }}">{{ profile.email | escape }}</a>
+          <button class="icon-button" type="button" data-copy="{{ profile.email | escape }}" aria-label="Copy email address" hidden>{% include icon.html name="copy" %}</button>
+        </p>
+        {%- if profile.location %}
+        <p class="contact__place">{% include icon.html name="pin" %}<span>{{ profile.affiliation | escape }}, {{ profile.location | escape }}</span></p>
+        {%- endif %}
+        <div class="contact__actions">
+          {%- if profile.cv %}
+          <a class="button" href="{{ profile.cv | relative_url }}">{% include icon.html name="file" %}<span>CV</span></a>
+          {%- endif %}
+          <ul class="links">
+            {%- for link in profile.links %}
+            {%- unless link.icon == "mail" %}
+            <li><a href="{{ link.url | escape }}" aria-label="{{ link.label | escape }}" title="{{ link.label | escape }}">{% include icon.html name=link.icon %}</a></li>
+            {%- endunless %}
+            {%- endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

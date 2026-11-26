@@ -1,13 +1,39 @@
+{%- assign service = site.data.service %}
 <section id="honors" class="section" aria-labelledby="honors-title">
-  <div class="section__head">
-    <h2 id="honors-title" class="section__title">{{ include.title | escape }}</h2>
+  <div class="container">
+    <header class="section__head">
+      <h2 id="honors-title" class="section__title">{{ include.title | escape }}</h2>
+    </header>
+    <div class="duo">
+      <div>
+        <h3 class="label">Honors</h3>
+        <ul class="ledger">
+          {%- for honor in site.data.honors %}
+          <li>
+            <span class="ledger__main">{{ honor.title | escape }}{% if honor.org %}<span class="ledger__org">{{ honor.org | escape }}</span>{% endif %}</span>
+            <span class="ledger__when">{{ honor.years | escape }}</span>
+          </li>
+          {%- endfor %}
+        </ul>
+      </div>
+      <div>
+        {%- if service.conferences %}
+        <h3 class="label">Conference reviewer</h3>
+        <ul class="venues">
+          {%- for venue in service.conferences %}
+          <li>{{ venue.name | escape }} <span>{{ venue.years | escape }}</span></li>
+          {%- endfor %}
+        </ul>
+        {%- endif %}
+        {%- if service.journals %}
+        <h3 class="label">Journal reviewer</h3>
+        <ul class="venues venues--stack">
+          {%- for journal in service.journals %}
+          <li>{{ journal | escape }}</li>
+          {%- endfor %}
+        </ul>
+        {%- endif %}
+      </div>
+    </div>
   </div>
-  <ul class="rows">
-    {%- for honor in site.data.honors %}
-    <li class="row">
-      <span class="row__date">{{ honor.year | escape }}</span>
-      <span class="row__body">{{ honor.title | escape }}{% if honor.org %}<span class="row__org">, {{ honor.org | escape }}</span>{% endif %}</span>
-    </li>
-    {%- endfor %}
-  </ul>
 </section>

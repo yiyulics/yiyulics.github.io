@@ -1,42 +1,52 @@
-# Who you are. Shown in the sidebar and at the top of the page.
+# Who you are: hero, about text, contact details and navigation.
 
 name: Yiyu Li
-role: Ph.D. Candidate, Computer Science
+role: Ph.D. Candidate
 affiliation: City University of Hong Kong
 affiliation_url: https://www.cityu.edu.hk/
+location: Hong Kong SAR
 email: yiyuli.cs@gmail.com
-avatar: /images/avatar.webp          # square, shown at 96px
-cv: /files/Yiyu_Li_CV.pdf            # rebuilt by scripts/build_public_cv.sh; remove this line to hide the button
+avatar: /images/avatar.webp          # square, shown at 100px
+cv: /files/Yiyu_Li_CV.pdf            # rebuilt by scripts/build_public_cv.sh; remove this line to hide the CV buttons
 
-# One paragraph per item. Markdown is supported.
-bio:
+# ---- Hero (top of the page) ----
+hero:
+  # \u00A0 is a non-breaking space: it keeps "in 3D" and "in code" from splitting across lines.
+  tagline: "I study how machines can model the visual world, in\u00A0pixels, in\u00A03D, and increasingly in\u00A0code."
+  intro: >-
+    I currently work on coding agents and world models for video generation: programs that represent
+    a scene and how it evolves, and agents that write and run that code to produce video.
+  demo: true                         # the interactive "world.py" figure; set to false to hide it
+  style: ascii                       # first renderer in the hero
+
+# Small highlighted note in the hero and in the contact section. Delete the block to hide it.
+status:
+  label: On the job market
+  text: Graduating in August 2027. Open to industry research roles and academic positions (postdoc / faculty).
+
+# ---- About ----  One paragraph per item. Markdown is supported.
+about:
   - >-
     I am a final-year Ph.D. candidate in Computer Science at the
     [City University of Hong Kong](https://www.cityu.edu.hk/), co-supervised by
     Prof. [Rynson W.H. Lau](https://www.cs.cityu.edu.hk/~rynson/) and
     Prof. [Gerhard Petrus Hancke](https://scholars.cityu.edu.hk/en/persons/gerhard-petrus-hancke).
-    My current research focuses on Sim2Real2Sim, world models, and video generation.
+    Before that, I received my B.Eng. from Harbin Institute of Technology.
   - >-
-    I am exploring code-based world models that represent scenes and their evolution in code,
-    as well as coding agents that write and execute code to generate videos and other visual content.
+    My current focus is coding agents for video generation. I study how agents can write and run
+    programs that describe a scene and how it changes over time.
     My previous work spans 3D generation, texture synthesis, 3D reconstruction, and image enhancement.
-    I am currently a research intern at Alibaba Amap, and I received my B.Eng. from
-    Harbin Institute of Technology.
-
-# Highlighted note under the bio. Delete the whole `status` block to hide it.
-status:
-  label: On the job market
-  text: >-
-    I expect to graduate in August 2027 and am looking for positions starting in 2027.
-    I am open to both industry research roles and academic positions (postdoc / faculty).
 
 interests:
+  - Coding Agents
   - World Models
   - Video Generation
-  - Sim2Real2Sim
-  - Coding Agents
   - 3D Generation & Reconstruction
   - Image Enhancement
+
+# ---- Contact ----
+contact:
+  text: The best way to reach me is by email.
 
 # Icon links, in display order. Available icons: mail, scholar, github, linkedin, dblp, orcid.
 links:
@@ -59,19 +69,21 @@ links:
     icon: orcid
     url: https://orcid.org/0009-0000-8264-8086
 
-# Section order of the page and of the navigation. `id` must match a file in _includes/sections/.
+# Sections after the hero, in page order. `id` must match a file in _includes/sections/;
+# `nav` is the short label in the top bar, `title` the heading on the page.
 sections:
   - id: about
+    nav: About
     title: About
-  - id: news
-    title: News
-  - id: publications
-    title: Publications
+  - id: research
+    nav: Research
+    title: Research & publications
   - id: experience
+    nav: Experience
     title: Experience
-  - id: education
-    title: Education
   - id: honors
-    title: Honors
-  - id: service
-    title: Service & Teaching
+    nav: Honors
+    title: Honors & service
+  - id: contact
+    nav: Contact
+    title: Get in touch

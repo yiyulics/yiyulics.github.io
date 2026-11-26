@@ -5,6 +5,7 @@ redirect_from:
   - /about/
   - /about.html
 ---
+{% include hero.html %}
 {%- for section in site.data.profile.sections %}
 {% include sections/{{ section.id }}.html title=section.title %}
 {%- endfor %}

@@ -1,0 +1,62 @@
+{%- assign pub = include.pub -%}
+{%- assign profile = site.data.profile -%}
+{%- assign primary = pub.links | first %}
+<li class="pub" id="pub-{{ pub.id | escape }}">
+  {%- if pub.image %}
+  <a class="pub__media" href="{{ pub.image_full | default: pub.image | relative_url }}" aria-label="Open the figure of {{ pub.title | escape }}">
+    <img src="{{ pub.image | relative_url }}?v={{ site.time | date: '%s' }}" alt="{{ pub.image_alt | escape }}" loading="lazy" decoding="async">
+  </a>
+  {%- elsif pub.motif %}
+  <div class="pub__media">{% include motifs/{{ pub.motif }}.svg %}</div>
+  {%- else %}
+  <div class="pub__media"></div>
+  {%- endif %}
+  <div class="pub__body">
+    <p class="pub__venue">
+      {%- if pub.under_review %}
+      <span class="badge badge--quiet">Under Review</span>
+      {%- elsif pub.venue %}
+      <span class="badge">{{ pub.venue | escape }}</span>
+      {%- endif %}
+      {%- if pub.scholar_id %}
+      <span class="pub__cites" data-cites="{{ pub.scholar_id | escape }}" hidden></span>
+      {%- endif %}
+    </p>
+    <h4 class="pub__title">
+      {%- if primary %}<a href="{{ primary.url | escape }}">{{ pub.title | escape }}</a>{% else %}{{ pub.title | escape }}{% endif -%}
+    </h4>
+    <p class="pub__authors">
+      {%- for author in pub.authors -%}
+      {%- assign name = author | escape | replace: " ", "&nbsp;" -%}
+      {%- if author == profile.name %}<strong>{{ name }}</strong>{% else %}{{ name }}{% endif %}{% unless forloop.last %}, {% endunless %}
+      {%- endfor -%}
+    </p>
+    {%- if pub.summary %}
+    <p class="pub__summary">{{ pub.summary | escape }}</p>
+    {%- endif %}
+    {%- if pub.links or pub.abstract or pub.bibtex %}
+    <ul class="pub__actions">
+      {%- for link in pub.links %}
+      <li><a class="chip" href="{{ link.url | escape }}">{{ link.label | escape }}{% if link.repo %}<span class="chip__stars" data-stars="{{ link.repo | escape }}" hidden>{% include icon.html name="star" %}<span></span></span>{% endif %}</a></li>
+      {%- endfor %}
+      {%- if pub.abstract %}
+      <li><button class="chip" type="button" data-toggle="abs-{{ pub.id | escape }}" aria-expanded="false" aria-controls="abs-{{ pub.id | escape }}" hidden>Abstract</button></li>
+      {%- endif %}
+      {%- if pub.bibtex %}
+      <li><button class="chip" type="button" data-toggle="bib-{{ pub.id | escape }}" aria-expanded="false" aria-controls="bib-{{ pub.id | escape }}" hidden>BibTeX</button></li>
+      {%- endif %}
+    </ul>
+    {%- endif %}
+    {%- if pub.abstract %}
+    <div class="pub__panel" id="abs-{{ pub.id | escape }}" hidden>
+      <p>{{ pub.abstract | escape }}</p>
+    </div>
+    {%- endif %}
+    {%- if pub.bibtex %}
+    <div class="pub__panel pub__panel--code" id="bib-{{ pub.id | escape }}" hidden>
+      <pre tabindex="0"><code>{{ pub.bibtex | strip | escape }}</code></pre>
+      <button class="chip chip--copy" type="button" data-copy="{{ pub.bibtex | strip | escape }}">{% include icon.html name="copy" %}<span>Copy</span></button>
+    </div>
+    {%- endif %}
+  </div>
+</li>

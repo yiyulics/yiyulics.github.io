@@ -1,0 +1,48 @@
+{%- assign profile = site.data.profile -%}
+{%- assign scholar = profile.links | where: "icon", "scholar" | first %}
+<section id="research" class="section" aria-labelledby="research-title">
+  <div class="container">
+    <header class="section__head">
+      <h2 id="research-title" class="section__title">{{ include.title | escape }}</h2>
+      {%- if scholar %}
+      <a class="section__aside" href="{{ scholar.url | escape }}"><span data-cites-total hidden></span>Google Scholar{% include icon.html name="arrow" %}</a>
+      {%- endif %}
+    </header>
+    {%- for theme in site.data.research %}
+    {%- assign papers = site.data.publications | where: "theme", theme.id %}
+    <article class="theme" aria-labelledby="theme-{{ theme.id | escape }}">
+      <div class="theme__intro">
+        <p class="theme__index">{{ forloop.index | prepend: "0" }}{% if theme.tag %}<span class="tag">{{ theme.tag | escape }}</span>{% endif %}</p>
+        <h3 id="theme-{{ theme.id | escape }}" class="theme__title">{{ theme.title | escape }}</h3>
+        <div class="theme__text">{{ theme.description | markdownify }}</div>
+        {%- if theme.keywords %}
+        <ul class="theme__keywords">
+          {%- for keyword in theme.keywords %}
+          <li>{{ keyword | escape }}</li>
+          {%- endfor %}
+        </ul>
+        {%- endif %}
+      </div>
+      <div class="theme__work">
+        {%- if papers.size > 0 %}
+        <ol class="pubs">
+          {%- for pub in papers %}
+          {% include pub.html pub=pub %}
+          {%- endfor %}
+        </ol>
+        {%- endif %}
+        {%- if theme.exploring %}
+        <div class="exploring">
+          <p class="label">In progress</p>
+          <ul>
+            {%- for item in theme.exploring %}
+            <li><strong>{{ item.title | escape }}</strong><span>{{ item.text | escape }}</span></li>
+            {%- endfor %}
+          </ul>
+        </div>
+        {%- endif %}
+      </div>
+    </article>
+    {%- endfor %}
+  </div>
+</section>

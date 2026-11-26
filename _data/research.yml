@@ -1,0 +1,37 @@
+# Research directions, in display order. Papers are attached to a direction through the
+# `theme` field in publications.yml.
+#
+#   id            referenced by publications
+#   tag           optional small label next to the title
+#   description   Markdown is supported
+#   keywords      short list shown under the description
+#   exploring     optional ongoing work without a paper yet: list of {title, text}
+
+- id: worlds
+  title: Coding agents & video generation
+  tag: Current focus
+  description: >-
+    I study coding agents that generate visual content by writing and executing code.
+    My work on autoregressive video diffusion explores how a few-step generator can retain
+    the diversity of the model it learns from.
+  keywords: [Coding agents, Code-based world models, Autoregressive video diffusion, Distillation]
+  exploring:
+    - title: Code-based world models
+      text: Representing scenes and their evolution in code.
+    - title: Coding agents for video
+      text: Agents that write and execute code to generate videos and other visual content.
+
+- id: 3d
+  title: 3D reconstruction & generation
+  description: >-
+    I recover and create 3D content from images: HDR novel view synthesis with 3D Gaussian
+    Splatting, high-fidelity surface normals from a single image, and texture generation for
+    articulated objects.
+  keywords: [3D Gaussian Splatting, HDR, Surface normals, Texture generation]
+
+- id: imaging
+  title: Image enhancement
+  description: >-
+    I make photographs taken in difficult lighting look right, from correcting the opposing color
+    shifts of over- and under-exposed regions to enhancing low-light images.
+  keywords: [Exposure correction, Low-light enhancement]

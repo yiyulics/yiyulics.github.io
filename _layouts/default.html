@@ -10,17 +10,26 @@
   {%- endif %}
   <body data-scholar-stats="{{ stats_base }}gs_data.json">
     <a class="skip-link" href="#main">Skip to content</a>
-    <div class="shell">
-      {%- include rail.html %}
-      <main id="main" class="main">
-        {{ content }}
-        <footer class="footer">
-          <span>&copy; {{ site.time | date: "%Y" }} {{ site.data.profile.name }}</span>
-          <span>Last updated {{ site.time | date: "%B %Y" }}</span>
-        </footer>
-      </main>
-    </div>
+    {%- include topbar.html %}
+    <main id="main">
+      {{ content }}
+    </main>
+    <footer class="footer">
+      <div class="container footer__inner">
+        <span>&copy; {{ site.time | date: "%Y" }} {{ site.data.profile.name | escape }}</span>
+        <span>Last updated {{ site.time | date: "%B %Y" }}</span>
+        <a href="#top">Back to top</a>
+      </div>
+    </footer>
     <script src="{{ '/assets/js/main.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+    {%- if page.url == "/" and site.data.profile.hero.demo %}
+    {%- assign first_scene = site.data.profile.hero.style | default: 'ascii' %}
+    {%- if first_scene == 'ascii' or first_scene == 'pixel' %}
+    <script src="{{ '/assets/js/beach-portrait.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+    {%- endif %}
+    <script src="{{ '/assets/js/scenes/' | append: first_scene | append: '.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+    <script src="{{ '/assets/js/world.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+    {%- endif %}
     {%- include analytics.html %}
   </body>
 </html>

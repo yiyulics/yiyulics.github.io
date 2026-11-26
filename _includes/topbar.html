@@ -1,0 +1,22 @@
+{%- assign profile = site.data.profile %}
+    <header class="topbar" id="top">
+      <div class="container topbar__inner">
+        <a class="brand" href="{{ '/' | relative_url }}">{{ profile.name | escape }}</a>
+        <nav class="nav" aria-label="Sections">
+          <ul>
+            {%- for section in profile.sections %}
+            <li><a href="{{ '/' | relative_url }}#{{ section.id | escape }}">{{ section.nav | default: section.title | escape }}</a></li>
+            {%- endfor %}
+          </ul>
+        </nav>
+        <div class="topbar__tools">
+          {%- if profile.cv %}
+          <a class="button button--small topbar__cv" href="{{ profile.cv | relative_url }}">CV</a>
+          {%- endif %}
+          <button class="icon-button" type="button" data-theme-toggle hidden aria-label="Switch between light and dark theme">
+            <span class="theme__icon theme__icon--light">{% include icon.html name="moon" %}</span>
+            <span class="theme__icon theme__icon--dark">{% include icon.html name="sun" %}</span>
+          </button>
+        </div>
+      </div>
+    </header>
