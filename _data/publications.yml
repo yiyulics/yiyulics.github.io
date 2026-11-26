@@ -14,25 +14,34 @@
 #                       Add `repo: owner/name` to a code link to show its GitHub stars.
 #   abstract            optional, shown behind an "Abstract" button
 #   bibtex              optional, shown behind a "BibTeX" button with a copy action
-#   scholar_id          Google Scholar publication id, enables the "Cited by N" counter
+#   openalex            OpenAlex work id (W…), enables the "Cited by N" counter. To find it, open
+#                       https://api.openalex.org/works/https://doi.org/10.48550/arXiv.<arXiv id>
 
 - id: mass-forcing
   theme: worlds
-  title: "Mass Forcing: On-Policy Mass-Aware Distillation for Autoregressive Video Diffusion"
-  authors: [Yiyu Li, Fei Wei, Yong Wang, Gerhard Petrus Hancke, Rynson W.H. Lau]
+  title: "Mass Forcing: On-Policy Mass-Aware Distillation for Autoregressive Video Generation"
+  authors: [Yiyu Li, Fei Wei, Yong Wang, Zaiquan Yang, Gerhard Petrus Hancke, Rynson W.H. Lau]
   under_review: true
-  motif: modes
+  image: /images/pubs/mass-forcing.webp
+  image_full: /images/pubs/mass-forcing-full.webp
+  image_alt: Video frames for a prompt about a father blowing up a balloon. Self Forcing stays nearly static while Mass Forcing shows the balloon being inflated
   summary: >-
     Counters mode-seeking in few-step autoregressive video generation by estimating
     teacher-to-student density ratios and upweighting underrepresented modes during distillation,
     with no inference-time overhead.
+  links:
+    - label: arXiv
+      url: https://arxiv.org/abs/2611.29618
+  openalex: W7239369541
 
 - id: facet
   theme: 3d
   title: "FACET: Estimating High-Fidelity Surface Normals in Latent Normal Space"
   authors: [Yiyu Li, Haoyuan Wang, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau]
   under_review: true
-  motif: facets
+  image: /images/pubs/facet.webp
+  image_full: /images/pubs/facet-full.webp
+  image_alt: A still life of textured objects around the letters FACET, next to the surface normals FACET predicts for it
   summary: >-
     A monocular surface-normal estimator built on NormalVAE, which decouples low-frequency semantics
     from high-frequency geometric residuals to avoid the detail loss of RGB-pretrained autoencoders.
@@ -56,7 +65,7 @@
     - label: Code
       url: https://github.com/yiyulics/SeHDR
       repo: yiyulics/SeHDR
-  scholar_id: "SXOMocYAAAAJ:UeHWp8X0CEIC"
+  openalex: W4414787371
   abstract: >-
     This paper presents SeHDR, a novel high dynamic range 3D Gaussian Splatting (HDR-3DGS) approach
     for generating HDR novel views given multi-view LDR images. Unlike existing methods that
@@ -88,7 +97,9 @@
   title: "Dense Exposure Sampling Matters for Low-light Image Enhancement"
   authors: [Yiyu Li, Ke Xu, Gerhard Petrus Hancke, Rynson W.H. Lau]
   under_review: true
-  motif: exposure
+  image: /images/pubs/dense-exposure.webp
+  image_full: /images/pubs/dense-exposure-full.webp
+  image_alt: A street scene with a chalkboard menu, dark in the low-light input on the left and enhanced by our method on the right
   summary: >-
     Restores normally exposed images from low-light inputs via dense exposure sampling in a
     self-reconstruction pipeline, with strong out-of-distribution generalization from small-scale
@@ -113,7 +124,7 @@
     - label: Code
       url: https://github.com/yiyulics/CSEC
       repo: yiyulics/CSEC
-  scholar_id: "SXOMocYAAAAJ:9yKSN-GCB0IC"
+  openalex: W4402774459
   abstract: >-
     Images captured under sub-optimal illumination conditions may contain both over- and
     under-exposures. Current approaches mainly focus on adjusting image brightness, which may

@@ -5,9 +5,11 @@ role: Ph.D. Candidate
 affiliation: City University of Hong Kong
 affiliation_url: https://www.cityu.edu.hk/
 location: Hong Kong SAR
-email: yiyuli.cs@gmail.com
+# The email address, encoded so that it is not stored as plain text. To change it, run
+# `python3 scripts/encode_email.py` and paste the value it prints. The page decodes it in the browser.
+email_code: "DgYLGQhHXhoELxUBBUccVxQAHw=="
 avatar: /images/avatar.webp          # square, shown at 100px
-cv: /files/Yiyu_Li_CV.pdf            # rebuilt by scripts/build_public_cv.sh; remove this line to hide the CV buttons
+cv: /files/Yiyu_Li_CV.pdf            # rebuilt by scripts/build_public_cv.sh; shown in the top bar; remove this line to hide it
 
 # ---- Hero (top of the page) ----
 hero:
@@ -36,23 +38,29 @@ about:
     My current focus is coding agents for video generation. I study how agents can write and run
     programs that describe a scene and how it changes over time.
     My previous work spans 3D generation, texture synthesis, 3D reconstruction, and image enhancement.
+  - >-
+    Alongside my Ph.D., I have worked in [industry research labs](#experience). I am currently a
+    research intern at Alibaba Amap, working on autoregressive video generation. Before that, I led
+    texture generation for an articulated-object project at Shanghai AI Laboratory, and worked on
+    neural texture compression at Huawei.
 
+# Shown as chips at the top of the page, under the intro.
 interests:
   - Coding Agents
+  - Agentic Generation
   - World Models
   - Video Generation
+  - Real2Sim2Real
+  - Diffusion Models
   - 3D Generation & Reconstruction
-  - Image Enhancement
 
 # ---- Contact ----
 contact:
   text: The best way to reach me is by email.
 
-# Icon links, in display order. Available icons: mail, scholar, github, linkedin, dblp, orcid.
+# Icon links, in display order. Available icons: scholar, github, linkedin, dblp, orcid.
+# (Email is not a link here: it comes from email_code above.)
 links:
-  - label: Email
-    icon: mail
-    url: mailto:yiyuli.cs@gmail.com
   - label: Google Scholar
     icon: scholar
     url: https://scholar.google.com/citations?user=SXOMocYAAAAJ&hl=en

@@ -11,10 +11,7 @@ baseurl: ""
 lang: "en"
 theme: null   # no gem theme: layouts and styles live in this repository
 
-# Google Scholar citation counts are crawled daily by .github/workflows/google_scholar_crawler.yaml
-# into the `google-scholar-stats` branch of this repository and read by the page at runtime.
 repository: "yiyulics/yiyulics.github.io"
-google_scholar_stats_use_cdn: true
 
 # Optional integrations; leave empty to disable.
 google_analytics_id:
@@ -44,7 +41,6 @@ exclude:
   - Gemfile.lock
   - run_server.sh
   - scripts
-  - google_scholar_crawler
   - crop.py
   - merge.py
   - resize.py

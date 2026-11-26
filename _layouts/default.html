@@ -3,12 +3,7 @@
   <head>
     {%- include head.html -%}
   </head>
-  {%- if site.google_scholar_stats_use_cdn -%}
-    {%- assign stats_base = "https://cdn.jsdelivr.net/gh/" | append: site.repository | append: "@google-scholar-stats/" -%}
-  {%- else -%}
-    {%- assign stats_base = "https://raw.githubusercontent.com/" | append: site.repository | append: "/google-scholar-stats/" -%}
-  {%- endif %}
-  <body data-scholar-stats="{{ stats_base }}gs_data.json">
+  <body id="top"{% if site.data.profile.email_code %} data-mail-code="{{ site.data.profile.email_code | escape }}"{% endif %}>
     <a class="skip-link" href="#main">Skip to content</a>
     {%- include topbar.html %}
     <main id="main">

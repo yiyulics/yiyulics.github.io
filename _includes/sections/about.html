@@ -13,13 +13,6 @@
           {{ paragraph | markdownify }}
           {%- endfor %}
         </div>
-        {%- if profile.interests %}
-        <ul class="tags" aria-label="Research interests">
-          {%- for interest in profile.interests %}
-          <li>{{ interest | escape }}</li>
-          {%- endfor %}
-        </ul>
-        {%- endif %}
       </div>
       {%- if news.entries %}
       <aside class="news" aria-labelledby="news-title">

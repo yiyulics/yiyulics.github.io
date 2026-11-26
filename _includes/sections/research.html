@@ -5,7 +5,7 @@
     <header class="section__head">
       <h2 id="research-title" class="section__title">{{ include.title | escape }}</h2>
       {%- if scholar %}
-      <a class="section__aside" href="{{ scholar.url | escape }}"><span data-cites-total hidden></span>Google Scholar{% include icon.html name="arrow" %}</a>
+      <a class="section__aside" href="{{ scholar.url | escape }}"><span data-cites-total title="Citations of the papers below, counted by OpenAlex" hidden></span>Google Scholar{% include icon.html name="arrow" %}</a>
       {%- endif %}
     </header>
     {%- for theme in site.data.research %}

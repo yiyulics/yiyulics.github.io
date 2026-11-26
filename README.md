@@ -2,7 +2,7 @@
 
 Yiyu Li 的学术主页：<https://yiyulics.github.io>。Jekyll 单页站点，由 GitHub Pages 直接构建，push 到 `main` 即上线。
 
-页面从上到下是：首屏（照片、姓名、一句话定位、求职状态、互动小图）→ About + News → 按研究方向组织的论文 → 经历时间线（旁边是教育和助教）→ 荣誉与审稿 → 联系方式。
+页面从上到下是：首屏（照片、姓名、一句话定位、研究兴趣的标签、求职状态、互动小图）→ About + News → 按研究方向组织的论文 → 经历时间线（旁边是教育和助教）→ 荣誉与审稿 → 联系方式。
 
 ## 改内容
 
@@ -20,6 +20,15 @@ Yiyu Li 的学术主页：<https://yiyulics.github.io>。Jekyll 单页站点，�
 | 审稿与助教 | `_data/service.yml` |
 
 站点标题、SEO 描述、统计代码在 `_config.yml`。
+
+### 邮箱
+
+仓库和页面源码里都不写邮箱明文，以免被爬虫收集。`_data/profile.yml` 的 `email_code` 存的是编码后的地址，页面在浏览器里把它还原：
+
+- 换邮箱：运行 `python3 scripts/encode_email.py`，输入地址，把打印出来的值填到 `email_code`。`python3 scripts/encode_email.py --check` 可以把当前的值解回来核对。
+- 页面上，联系方式一节是一个小终端，里面预先打好了一条命令：`echo <邮箱的 base64> | base64 -d`。访客按 Enter（或点那个 Enter 键）才会运行，输出邮箱，同时出现 "Email me" 和复制按钮。运行之前，页面里只有 base64，没有邮箱明文，也没有 `mailto:`。没开 JavaScript 时终端不出现。
+- 这只是防自动收集的混淆，不是加密：页面必须能还原地址，所以认真去读脚本的人也能还原。
+- 公开版 CV（`files/Yiyu_Li_CV.pdf`）里仍有邮箱，那是简历本身的内容。
 
 ### 加一篇论文
 
@@ -42,7 +51,7 @@ Yiyu Li 的学术主页：<https://yiyulics.github.io>。Jekyll 单页站点，�
   abstract: 摘要全文。                 # 可选：显示 Abstract 按钮
   bibtex: |                           # 可选：显示 BibTeX 按钮和复制
     @InProceedings{...}
-  scholar_id: "SXOMocYAAAAJ:xxxxxxxxxxxx"   # 可选：显示 Cited by N
+  openalex: W1234567890               # 可选：显示 Cited by N（OpenAlex 的 work id）
 ```
 
 - teaser 放在 `images/pubs/`，宽度 1000px 左右即可：`cwebp -q 80 -resize 1120 0 teaser.png -o images/pubs/my-paper.webp`。
@@ -83,7 +92,7 @@ Yiyu Li 的学术主页：<https://yiyulics.github.io>。Jekyll 单页站点，�
 
 ### 引用数和 star 数
 
-- 引用数：`.github/workflows/google_scholar_crawler.yaml` 每天抓取 Google Scholar，把结果写到 `google-scholar-stats` 分支，页面加载时读取。可以在 GitHub 的 Actions 页面手动运行这个 workflow。
+- 引用数：页面加载时请求 [OpenAlex](https://openalex.org) 的公开 API，一次请求查完页面上所有写了 `openalex` 的论文，结果在浏览器里保存一天。Research 标题旁的总数是这些论文引用数之和。论文的 work id 这样查：打开 `https://api.openalex.org/works/https://doi.org/10.48550/arXiv.<arXiv 编号>`，取返回结果里 `id` 末尾的 `W…`。数字来自 OpenAlex，和 Google Scholar 上的会略有出入。
 - star 数：页面加载时直接请求 GitHub 的公开 API。
 
 两者都是可选的，取不到时页面只是不显示数字。
@@ -133,7 +142,6 @@ assets/fonts/            自托管字体（Newsreader、Geist、Geist Mono，OFL
 images/                  头像、论文 teaser、favicon
 files/                   公开版 CV
 scripts/                 生成公开版 CV 和论文示意图的脚本
-google_scholar_crawler/  引用数抓取脚本
 ```
 
-引用数抓取部分来自 [AcadHomepage](https://github.com/RayeRen/acad-homepage.github.io) 模板（MIT 许可，见 `LICENSE`）。
+本站最初基于 [AcadHomepage](https://github.com/RayeRen/acad-homepage.github.io) 模板搭建（MIT 许可，见 `LICENSE`）。

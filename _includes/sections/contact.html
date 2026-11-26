@@ -12,17 +12,32 @@
         {%- endif %}
       </div>
       <div class="contact__ways">
-        <p class="contact__email">
-          <a href="mailto:{{ profile.email | escape }}">{{ profile.email | escape }}</a>
-          <button class="icon-button" type="button" data-copy="{{ profile.email | escape }}" aria-label="Copy email address" hidden>{% include icon.html name="copy" %}</button>
-        </p>
+        {%- if profile.email_code %}
+        {%- comment %}
+          A small terminal with the command already typed: the address in base64, piped to a decoder.
+          The visitor presses Enter to run it; only then is the address printed and the email and copy
+          buttons shown. Before that the address is not in the page (see "Email" in main.js).
+        {%- endcomment %}
+        <div class="term" data-term hidden>
+          <div class="term__bar"><span class="term__file">{% include icon.html name="file" %}contact.sh</span></div>
+          <div class="term__body" aria-live="polite">
+            <p><span class="term__prompt" aria-hidden="true">$</span> echo <span data-term-code></span> | base64 -d<span class="term__cursor" data-term-cursor aria-hidden="true"></span></p>
+            <p class="term__out" data-term-out hidden></p>
+            <p data-term-next hidden><span class="term__prompt" aria-hidden="true">$</span> <span class="term__cursor" aria-hidden="true"></span></p>
+          </div>
+          <div class="term__foot">
+            <button class="term__run" type="button" data-term-run aria-label="Press Enter to run the command and print my email address"><kbd>⏎</kbd><span>Enter</span></button>
+            <span class="term__hint" data-term-hint>to run</span>
+            <a class="button button--primary button--small" href="#contact" data-mail hidden>{% include icon.html name="mail" %}<span>Email me</span></a>
+            <button class="icon-button copy-button" type="button" data-copy data-copy-mail aria-label="Copy my email address" title="Copy my email address" hidden><span class="copy__icon copy__icon--idle">{% include icon.html name="copy" %}</span><span class="copy__icon copy__icon--done">{% include icon.html name="check" %}</span></button>
+          </div>
+        </div>
+        <noscript><p class="contact__nojs">Turn on JavaScript to see my email, or reach me through the links below.</p></noscript>
+        {%- endif %}
         {%- if profile.location %}
         <p class="contact__place">{% include icon.html name="pin" %}<span>{{ profile.affiliation | escape }}, {{ profile.location | escape }}</span></p>
         {%- endif %}
         <div class="contact__actions">
-          {%- if profile.cv %}
-          <a class="button" href="{{ profile.cv | relative_url }}">{% include icon.html name="file" %}<span>CV</span></a>
-          {%- endif %}
           <ul class="links">
             {%- for link in profile.links %}
             {%- unless link.icon == "mail" %}

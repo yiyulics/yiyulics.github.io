@@ -44,6 +44,9 @@
       try {
         var saved = localStorage.getItem("theme");
         if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+        var dark = saved === "dark" || (!saved && matchMedia("(prefers-color-scheme: dark)").matches);
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.content = dark ? "#0f1115" : "#fafafb";
       } catch (e) {}
     </script>
     <link rel="preload" href="{{ '/assets/fonts/geist-latin-wght-normal.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
@@ -63,7 +66,6 @@
         "name": {{ profile.name | jsonify }},
         "url": {{ "/" | absolute_url | jsonify }},
         "image": {{ "/images/avatar.jpg" | absolute_url | jsonify }},
-        "email": {{ profile.email | prepend: "mailto:" | jsonify }},
         "jobTitle": {{ profile.role | jsonify }},
         "description": {{ site.description | strip_newlines | jsonify }},
         "affiliation": { "@type": "CollegeOrUniversity", "name": {{ profile.affiliation | jsonify }}{% if profile.affiliation_url %}, "url": {{ profile.affiliation_url | jsonify }}{% endif %} },

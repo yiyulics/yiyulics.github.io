@@ -18,8 +18,8 @@
       {%- elsif pub.venue %}
       <span class="badge">{{ pub.venue | escape }}</span>
       {%- endif %}
-      {%- if pub.scholar_id %}
-      <span class="pub__cites" data-cites="{{ pub.scholar_id | escape }}" hidden></span>
+      {%- if pub.openalex %}
+      <span class="pub__cites" data-cites="{{ pub.openalex | escape }}" title="Citation count from OpenAlex" hidden></span>
       {%- endif %}
     </p>
     <h4 class="pub__title">
@@ -55,7 +55,7 @@
     {%- if pub.bibtex %}
     <div class="pub__panel pub__panel--code" id="bib-{{ pub.id | escape }}" hidden>
       <pre tabindex="0"><code>{{ pub.bibtex | strip | escape }}</code></pre>
-      <button class="chip chip--copy" type="button" data-copy="{{ pub.bibtex | strip | escape }}">{% include icon.html name="copy" %}<span>Copy</span></button>
+      <button class="chip chip--copy copy-button" type="button" data-copy="{{ pub.bibtex | strip | escape }}"><span class="copy__icon copy__icon--idle">{% include icon.html name="copy" %}</span><span class="copy__icon copy__icon--done">{% include icon.html name="check" %}</span><span data-copy-label>Copy</span></button>
     </div>
     {%- endif %}
   </div>

@@ -18,14 +18,18 @@
       {%- if profile.hero.intro %}
       <p class="hero__intro">{{ profile.hero.intro | escape }}</p>
       {%- endif %}
+      {%- if profile.interests %}
+      <ul class="tags hero__tags" aria-label="Research interests">
+        {%- for interest in profile.interests %}
+        <li>{{ interest | escape }}</li>
+        {%- endfor %}
+      </ul>
+      {%- endif %}
       {%- if profile.status %}
       <p class="status"><strong class="status__label">{{ profile.status.label | escape }}</strong> <span>{{ profile.status.text | escape }}</span></p>
       {%- endif %}
       <div class="hero__actions">
-        <a class="button button--primary" href="mailto:{{ profile.email | escape }}">{% include icon.html name="mail" %}<span>Get in touch</span></a>
-        {%- if profile.cv %}
-        <a class="button" href="{{ profile.cv | relative_url }}">{% include icon.html name="file" %}<span>CV</span></a>
-        {%- endif %}
+        <a class="button button--primary" href="#contact">{% include icon.html name="mail" %}<span>Get in touch</span></a>
         <ul class="links">
           {%- for link in profile.links %}
           {%- unless link.icon == "mail" %}

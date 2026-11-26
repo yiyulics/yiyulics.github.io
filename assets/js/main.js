@@ -53,6 +53,7 @@
 
   /* ---- Top bar: hairline once the page is scrolled, current section in the nav ---- */
   const topbar = document.querySelector(".topbar");
+  const navBar = document.querySelector(".nav");
   const navLinks = $$(".nav a").filter(
     (link) => link.pathname === window.location.pathname && document.getElementById(link.hash.slice(1))
   );
@@ -60,9 +61,19 @@
   let active = -2;
   let queued = false;
 
+  const updateNavFade = () => {
+    if (!navBar) return;
+    const maxScroll = navBar.scrollWidth - navBar.clientWidth;
+    const overflow = maxScroll > 1;
+    navBar.classList.toggle("is-fade-left", overflow && navBar.scrollLeft > 2);
+    navBar.classList.toggle("is-fade-right", overflow && maxScroll - navBar.scrollLeft > 2);
+  };
+  if (navBar) navBar.addEventListener("scroll", updateNavFade, { passive: true });
+
   const onScroll = () => {
     queued = false;
     if (topbar) topbar.classList.toggle("is-stuck", window.scrollY > 4);
+    updateNavFade();
     if (!sections.length) return;
 
     const line = window.innerHeight * 0.35;
@@ -75,15 +86,14 @@
     active = index;
 
     // keep the current link in view when the nav itself scrolls (narrow screens)
-    const bar = document.querySelector(".nav");
-    const scrollable = bar && bar.scrollWidth > bar.clientWidth;
-    if (scrollable && index < 0) bar.scrollTo({ left: 0, behavior: "smooth" });
+    const scrollable = navBar && navBar.scrollWidth > navBar.clientWidth + 1;
+    if (scrollable && index < 0) navBar.scrollTo({ left: 0, behavior: "smooth" });
 
     navLinks.forEach((link, i) => {
       if (i !== index) return link.removeAttribute("aria-current");
       link.setAttribute("aria-current", "true");
       if (scrollable) {
-        bar.scrollTo({ left: link.offsetLeft - bar.clientWidth / 2 + link.offsetWidth / 2, behavior: "smooth" });
+        navBar.scrollTo({ left: link.offsetLeft - navBar.clientWidth / 2 + link.offsetWidth / 2, behavior: "smooth" });
       }
     });
   };
@@ -101,6 +111,7 @@
      Only what is off screen when the page loads is touched, so nothing that is already
      visible flickers, and without this script nothing is ever hidden. */
   if (!reducedMotion.matches && "IntersectionObserver" in window) {
+    const revealEls = [];
     const arrive = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -109,13 +120,24 @@
           arrive.unobserve(entry.target);
         });
       },
-      { rootMargin: "0px 0px -8% 0px" }
+      { rootMargin: "0px 0px 40px 0px" }
     );
     $$(".section__head, .about__main, .news, .theme__intro, .pub, .exploring, .job, .side, .duo > *, .contact").forEach((el) => {
-      if (el.getBoundingClientRect().top < window.innerHeight) return;
+      if (el.getBoundingClientRect().top < window.innerHeight + 40) return;
       el.classList.add("reveal");
+      revealEls.push(el);
       arrive.observe(el);
     });
+    const flushVisible = () => {
+      const limit = window.innerHeight + 40;
+      revealEls.forEach((el) => {
+        if (!el.classList.contains("is-in") && el.getBoundingClientRect().top <= limit) {
+          el.classList.add("is-in");
+          arrive.unobserve(el);
+        }
+      });
+    };
+    window.addEventListener("hashchange", () => requestAnimationFrame(flushVisible));
   }
 
   /* ---- Paper figures open in place, over the page ---- */
@@ -153,6 +175,7 @@
         box.setAttribute("aria-label", caption.textContent ? `Figure: ${caption.textContent}` : "Figure");
         image.src = link.href;
         box.showModal();
+        if (image.complete && image.naturalWidth) box.classList.add("is-ready");
       });
     });
   }
@@ -174,6 +197,68 @@
     });
   });
 
+  /* ---- Email ----
+     The address is not written in the page source. profile.yml holds it encoded
+     (scripts/encode_email.py) and it is decoded here. The contact section shows a small terminal
+     with a command already typed, the address in base64 piped to a decoder; the visitor runs it
+     with Enter. Until then the address itself is in this script only; running the command prints
+     it and shows the email and copy buttons. */
+  const MAIL_KEY = "world.py";
+  const mailAddress = (() => {
+    try {
+      const mixed = atob(document.body.dataset.mailCode || "");
+      const bytes = Uint8Array.from(mixed, (char, i) => char.charCodeAt(0) ^ MAIL_KEY.charCodeAt(i % MAIL_KEY.length));
+      const address = new TextDecoder().decode(bytes);
+      return address.includes("@") ? address : "";
+    } catch (error) {
+      return "";
+    }
+  })();
+
+  const term = document.querySelector("[data-term]");
+  if (mailAddress && term) {
+    const part = (name) => term.querySelector(`[data-term-${name}]`);
+    const run = part("run");
+    const link = term.querySelector("[data-mail]");
+    part("code").textContent = btoa(String.fromCharCode(...new TextEncoder().encode(mailAddress)));
+    term.hidden = false;
+
+    let done = false;
+    const execute = () => {
+      if (done) return;
+      done = true;
+      const hadFocus = term.contains(document.activeElement);
+      part("cursor").remove();
+      part("out").textContent = mailAddress;
+      part("out").hidden = false;
+      part("next").hidden = false;
+      run.hidden = true;
+      part("hint").hidden = true;
+      link.href = `mailto:${mailAddress}`;
+      link.hidden = false;
+      term.querySelector("[data-copy-mail]").hidden = false;
+      term.classList.add("is-done");
+      if (hadFocus) link.focus({ preventScroll: true });
+    };
+
+    run.addEventListener("click", execute);
+    // a click on the terminal puts the keyboard in it, as in a real one
+    term.addEventListener("click", (event) => {
+      if (!done && !event.target.closest("button, a")) run.focus({ preventScroll: true });
+    });
+    // Enter also runs the command when nothing else has the keyboard and the terminal is in view
+    document.addEventListener("keydown", (event) => {
+      if (done || event.key !== "Enter" || event.defaultPrevented || event.repeat) return;
+      const active = document.activeElement;
+      if (active && active !== document.body && active !== document.documentElement) return;
+      const box = term.getBoundingClientRect();
+      const middle = (box.top + box.bottom) / 2;
+      if (middle < 0 || middle > window.innerHeight) return;
+      event.preventDefault();
+      execute();
+    });
+  }
+
   /* ---- Copy buttons (BibTeX, email) ---- */
   const copyText = async (text) => {
     try {
@@ -193,53 +278,89 @@
   };
 
   $$("[data-copy]").forEach((button) => {
-    button.hidden = false;
-    const label = button.querySelector("span");
+    // the email's copy button appears once the terminal has printed the address
+    if (!("copyMail" in button.dataset)) button.hidden = false;
+    const label = button.querySelector("[data-copy-label]");
     const original = label ? label.textContent : button.getAttribute("aria-label");
+    const originalTitle = button.getAttribute("title");
     let timer;
     button.addEventListener("click", async () => {
-      const ok = await copyText(button.dataset.copy);
+      const ok = await copyText("copyMail" in button.dataset ? mailAddress : button.dataset.copy);
       const message = ok ? "Copied" : "Press Ctrl+C";
       if (label) label.textContent = message;
       else button.setAttribute("aria-label", message);
+      if (originalTitle) button.setAttribute("title", message);
+      button.dataset.copyStatus = message;
       button.classList.toggle("is-done", ok);
       clearTimeout(timer);
       timer = setTimeout(() => {
         if (label) label.textContent = original;
         else button.setAttribute("aria-label", original);
+        if (originalTitle) button.setAttribute("title", originalTitle);
+        delete button.dataset.copyStatus;
         button.classList.remove("is-done");
       }, 1600);
     });
   });
 
-  /* ---- Citation counts from the google-scholar-stats branch ---- */
-  const statsUrl = document.body.dataset.scholarStats;
+  /* ---- Citation counts from OpenAlex ----
+     One request covers every paper on the page. Without a key the API gives each visitor
+     address a small daily allowance, so the counts are kept in the browser for a day, and
+     older ones are reused if the request fails. */
+  const CITES_KEY = "cites:openalex";
+  const CITES_TTL = 24 * 60 * 60 * 1000;
   const perPaper = $$("[data-cites]");
-  const total = $$("[data-cites-total]");
+  const works = [...new Set(perPaper.map((el) => el.dataset.cites))].filter((id) => /^W\d+$/.test(id));
 
-  if (statsUrl && (perPaper.length || total.length)) {
-    fetch(statsUrl)
-      .then((response) => (response.ok ? response.json() : Promise.reject(new Error(response.status))))
-      .then((stats) => {
-        const publications = stats.publications || {};
-        perPaper.forEach((el) => {
-          const count = Number((publications[el.dataset.cites] || {}).num_citations);
-          if (count > 0) {
-            el.textContent = `Cited by ${count}`;
-            el.hidden = false;
+  const showCites = (counts) => {
+    perPaper.forEach((el) => {
+      const count = Number(counts[el.dataset.cites]);
+      if (!(count > 0)) return;
+      el.textContent = `Cited by ${count}`;
+      el.hidden = false;
+    });
+    const all = works.reduce((sum, id) => sum + (Number(counts[id]) || 0), 0);
+    if (!(all > 0)) return;
+    $$("[data-cites-total]").forEach((el) => {
+      el.textContent = `${all} citations`;
+      el.hidden = false;
+    });
+  };
+
+  if (works.length) {
+    (async () => {
+      let saved = null;
+      try {
+        saved = JSON.parse(localStorage.getItem(CITES_KEY));
+      } catch (error) {
+        /* no storage, or nothing saved yet */
+      }
+      let counts = (saved && saved.counts) || {};
+      const fresh = saved && Date.now() - saved.at < CITES_TTL && works.every((id) => id in counts);
+
+      if (!fresh) {
+        try {
+          const response = await fetch(
+            `https://api.openalex.org/works?filter=openalex:${works.join("|")}&select=id,cited_by_count&per-page=100`
+          );
+          if (response.ok) {
+            const fetched = {};
+            ((await response.json()).results || []).forEach((work) => {
+              fetched[String(work.id).split("/").pop()] = Number(work.cited_by_count) || 0;
+            });
+            counts = Object.assign({}, counts, fetched);
+            try {
+              localStorage.setItem(CITES_KEY, JSON.stringify({ counts, at: Date.now() }));
+            } catch (error) {
+              /* the counts just won't be remembered */
+            }
           }
-        });
-        const all = Number(stats.citedby);
-        if (all > 0) {
-          total.forEach((el) => {
-            el.textContent = `${all} citations`;
-            el.hidden = false;
-          });
+        } catch (error) {
+          /* offline or blocked: fall back to the saved counts, if any */
         }
-      })
-      .catch(() => {
-        /* stats are optional; leave the counters hidden */
-      });
+      }
+      showCites(counts);
+    })();
   }
 
   /* ---- GitHub stars on code links (shown from 10 stars up) ----
