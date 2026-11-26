@@ -2793,7 +2793,7 @@ layer, material, pts, tris, outline,
     return lc;
   };
 
-  const drawWire = (ctx, s, L, t, lean, P, parts, overlay) => {
+  const drawWire = (ctx, s, L, t, lean, P, parts, overlay, world) => {
     const part = (k) => (parts[k] === undefined ? 1 : clamp(+parts[k], 0, 1));
     const pb = part("beach");
     const ps = part("sea");
@@ -2803,19 +2803,26 @@ layer, material, pts, tris, outline,
     WS.ctx = ctx;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-    if (!overlay) wireBackground(ctx, s, L, lean);
-    const fronts = frontsOf(s, t, KY / (shoreBase(s) - HORIZON));
+    // the world's own construction lines, when it is the 3D one
+    const lines = world && (!overlay || pb + ps + pw > 0) ? world({ view: "wire", overlay, parts: { beach: pb, sea: ps, walkers: pw } }) : null;
+    if (!overlay && lines) ctx.drawImage(lines, 0, 0, W, H);
+    else if (!overlay) wireBackground(ctx, s, L, lean);
     // over the picture, everything is drawn on a layer first, so that he can hide what is behind him
     const dc = overlay ? overlayLayer(ctx) : ctx;
     WS.ctx = dc;
     dc.lineCap = "round";
     dc.lineJoin = "round";
-    if (pb > 0) wireBeach(dc, s, L, t, lean, pb);
-    if (ps > 0) {
-      computeSea(s, t, lean, fronts);
-      wireSea(dc, s, L, t, lean, ps, fronts);
+    if (world) {
+      if (overlay && lines) dc.drawImage(lines, 0, 0, W, H);
+    } else {
+      const fronts = frontsOf(s, t, KY / (shoreBase(s) - HORIZON));
+      if (pb > 0) wireBeach(dc, s, L, t, lean, pb);
+      if (ps > 0) {
+        computeSea(s, t, lean, fronts);
+        wireSea(dc, s, L, t, lean, ps, fronts);
+      }
+      if (pw > 0) wireWalkers(dc, s, L, t, lean, pw);
     }
-    if (pw > 0) wireWalkers(dc, s, L, t, lean, pw);
     if (overlay && pb + ps + pw > 0) {
       const facets = personFacets(s, P);
       dc.beginPath();
@@ -2825,7 +2832,7 @@ layer, material, pts, tris, outline,
       dc.fill();
       dc.globalCompositeOperation = "source-over";
     }
-    if (pp > 0) wirePerson(dc, s, L, t, P, pp, overlay ? null : rgba(mix3(WIRE.bg0, WIRE.bg1, 0.6), 1));
+    if (pp > 0) wirePerson(dc, s, L, t, P, pp, overlay ? null : world ? "rgb(15,19,34)" : rgba(mix3(WIRE.bg0, WIRE.bg1, 0.6), 1));
     if (overlay) {
       WS.ctx = ctx;
       ctx.save();
@@ -2881,8 +2888,20 @@ layer, material, pts, tris, outline,
     ctx.save();
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = "source-over";
+    // The world behind him is the shared 3D scene when the browser can draw it; the flat one below otherwise.
+    const env = window.BeachEnv && window.BeachEnv.ready() ? window.BeachEnv : null;
+    const px = clamp(scale, 0.25, 3);
+    const world = env ? (how) => env.canvas(Object.assign({}, state, how), Math.round(W * px), Math.round(H * px)) : null;
     if (view === "wire") {
-      drawWire(ctx, s, L, t, lean, P, state.parts || {}, state.overlay === true);
+      drawWire(ctx, s, L, t, lean, P, state.parts || {}, state.overlay === true, world);
+      ctx.restore();
+      return;
+    }
+    const backdrop = world && world({ view });
+    if (backdrop) {
+      ctx.drawImage(backdrop, 0, 0, W, H);
+      drawPerson(ctx, s, L, t, P, view, s.hoodie);
+      rememberPerson(FACETS);
       ctx.restore();
       return;
     }
@@ -2929,6 +2948,7 @@ layer, material, pts, tris, outline,
     const lean = clamp(s.lean, -1, 1);
     const facets = personFacets(s, pose(s, t));
     for (const f of facets) if (inTri(x, y, f[2], f[3], f[4], f[5], f[6], f[7])) return "person";
+    if (window.BeachEnv && window.BeachEnv.ready()) return window.BeachEnv.pick(x, y, state || {}) || "beach";
     const count = clamp(Math.round(s.walkers), 0, 5);
     for (let k = 0; k < count; k += 1) {
       const { x: wx, feet, z } = walkerAt(k, s, t, lean);

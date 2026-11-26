@@ -1127,21 +1127,134 @@
     glasses: state.glasses !== false && state.glasses !== "false" && state.glasses !== "False",
     smile: state.smile === undefined ? 0.8 : +state.smile,
     lean: +state.lean || 0,
+    yaw: +state.yaw || 0,
+    pitch: +state.pitch || 0,
     hello: state.hello === undefined || state.hello === null ? -1 : +state.hello,
   });
+
+  /* ---------- the 3D world behind him, typed on this grid ----------
+     When the shared world (assets/js/beach-env.js) is there, it is rendered small and read
+     back twice: its colours at half-cell resolution, which become the ground under the
+     characters, and what each cell shows. From the two, every cell gets a character: a
+     contour where one thing ends and another begins, a mark where the picture has detail
+     (a crest, a grain of sand, a star), or nothing. */
+  const worldOf = () => (window.BeachEnv && window.BeachEnv.ready() ? window.BeachEnv : null);
+  //            -  sky    cloud    sun    gull    sea    foam    sand    wet    rock    walker    land    boat   grass   tower
+  const E_MAT = [M.SKY, M.SKY, M.CLOUD, M.SUN, M.GULL, M.SEA, M.FOAM, M.SAND, M.WET, M.ROCK, M.WALKER, M.ROCK, M.SEA, M.ROCK, M.ROCK];
+  const E_OWN = [1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 3, 1, 2, 1, 1];
+  const E_GROUP = [1, 1, 2, 3, 4, 5, 5, 7, 7, 9, 10, 11, 12, 13, 14]; // foam is sea and wet sand is sand, for the contours
+  const eid = new Uint8Array(NC);
+  const lum = new Float32Array(NC);
+  const cellC = new Uint8Array(NC * 3);
+  const BANDS = 16; // steps of brightness in the ground
+  const cellHash = (c, r) => frac(Math.sin(c * 12.9898 + r * 78.233) * 43758.5453);
+  const paintEnvironment3d = (env, state, L) => {
+    const ids = env.pixels(Object.assign({}, state, { view: "ids" }), COLS, ROWS);
+    if (!ids) return false;
+    for (let i = 0; i < NC; i += 1) eid[i] = ids[i * 4] < 15 ? ids[i * 4] : 0;
+    const px = env.pixels(Object.assign({}, state, { view: "rgb", look: { grain: 0, vignette: 0.12 } }), GW2, GH2);
+    if (!px) return false;
+    // the ground: the picture itself, dimmed to the terminal's dark screen as the daylight goes
+    const dark = 1 - L.paper;
+    const gain = dark * 0.36 + L.paper * 0.97;
+    for (let k = 0; k < GW2 * GH2 * 4; k += 4) {
+      // brightness in a few flat bands, as a terminal's blocks of colour; the hue is kept
+      const luma = Math.sqrt((px[k] * 0.3 + px[k + 1] * 0.55 + px[k + 2] * 0.15) / 255);
+      const band = Math.round(luma * BANDS) / BANDS;
+      const q = luma > 0.02 ? (gain * band * band) / (luma * luma) : gain;
+      glo[k] = dark * L.term[0] + Math.min(255, q * px[k]);
+      glo[k + 1] = dark * L.term[1] + Math.min(255, q * px[k + 1]);
+      glo[k + 2] = dark * L.term[2] + Math.min(255, q * px[k + 2]);
+      glo[k + 3] = 255;
+    }
+    for (let r = 0, i = 0; r < ROWS; r += 1)
+      for (let c = 0; c < COLS; c += 1, i += 1) {
+        const a = (r * 2 * GW2 + c * 2) * 4, b = a + GW2 * 4;
+        const R = (px[a] + px[a + 4] + px[b] + px[b + 4]) >> 2;
+        const G = (px[a + 1] + px[a + 5] + px[b + 1] + px[b + 5]) >> 2;
+        const B = (px[a + 2] + px[a + 6] + px[b + 2] + px[b + 6]) >> 2;
+        cellC[i * 3] = R; cellC[i * 3 + 1] = G; cellC[i * 3 + 2] = B;
+        lum[i] = (R * 0.3 + G * 0.55 + B * 0.15) / 255;
+      }
+    const col = [0, 0, 0];
+    const lift = (k) => [col[0] + (255 - col[0]) * k, col[1] + (255 - col[1]) * k, col[2] + (255 - col[2]) * k];
+    for (let r = 0, i = 0; r < ROWS; r += 1)
+      for (let c = 0; c < COLS; c += 1, i += 1) {
+        const e = eid[i], g = E_GROUP[e];
+        const up = r > 0 ? i - COLS : i, dn = r < ROWS - 1 ? i + COLS : i, lf = c > 0 ? i - 1 : i, rt = c < COLS - 1 ? i + 1 : i;
+        const gd = E_GROUP[eid[dn]], gl = E_GROUP[eid[lf]], gr = E_GROUP[eid[rt]], gu = E_GROUP[eid[up]];
+        col[0] = cellC[i * 3]; col[1] = cellC[i * 3 + 1]; col[2] = cellC[i * 3 + 2];
+        const hp = lum[i] - (lum[up] + lum[dn] + lum[lf] + lum[rt]) * 0.25; // brighter or darker than what is around it
+        const h = cellHash(c, r);
+        mat[i] = E_MAT[e];
+        own[i] = E_OWN[e];
+        let ch = "", edge = "", shade = 0.72;
+        // contours: a rule under whatever ends here, a stroke down the side of whatever stands in front
+        if (gd !== g) edge = gl !== g && gr === g && gl < g ? "/" : gr !== g && gl === g && gr < g ? "\\" : "_";
+        else if (gl < g) edge = (r < ROWS - 1 && c > 0 && E_GROUP[eid[dn - 1]] === g) ? "/" : (r > 0 && c > 0 && E_GROUP[eid[up - 1]] === g) ? "\\" : "|";
+        else if (gr < g) edge = (r < ROWS - 1 && c < COLS - 1 && E_GROUP[eid[dn + 1]] === g) ? "\\" : (r > 0 && c < COLS - 1 && E_GROUP[eid[up + 1]] === g) ? "/" : "|";
+        if (e === 5) { // sea: crests and troughs
+          if (lum[i] > 0.9 && hp > 0.03) { ch = "*"; shade = -0.7; }
+          else if (hp > 0.045) { ch = "~"; shade = -0.5; }
+          else if (hp > 0.016) { ch = "~"; shade = -0.22; }
+          else if (hp < -0.035) ch = "_";
+          else if (hp < -0.014) ch = "-";
+        } else if (e === 6) { // foam
+          ch = hp > 0.02 ? (h < 0.5 ? "*" : "\u00b0") : h < 0.34 ? "~" : h < 0.6 ? '"' : h < 0.8 ? "o" : "~";
+          shade = hp > 0.02 ? -0.75 : 0.8;
+        } else if (e === 7) { // dry sand
+          if (hp > 0.022) { ch = "."; shade = -0.4; }
+          else if (hp < -0.022) ch = h < 0.5 ? "," : ":";
+          else if (h < 0.035) ch = ".";
+        } else if (e === 8) { // wet sand
+          if (hp > 0.03) { ch = "-"; shade = -0.35; }
+          else if (hp < -0.03) ch = "_";
+          else if (h < 0.03) ch = "-";
+        } else if (e === 1) { // sky: only the stars, and a wisp of high cloud
+          if (hp > 0.11) { ch = "*"; shade = -0.8; }
+          else if (hp > 0.04 && dark > 0.3) { ch = h < 0.5 ? "." : "+"; shade = -0.7; }
+          else if (hp > 0.035) { ch = "-"; shade = -0.35; }
+        } else if (e === 2) { // cloud: the shaded side is stippled
+          if (hp < -0.03) ch = ":";
+          else if (hp < -0.012) ch = ".";
+          else if (hp > 0.04) { ch = "'"; shade = -0.6; }
+        } else if (e === 3) { ch = h < 0.5 ? "@" : "O"; shade = -0.5; }
+        else if (e === 4) { ch = "v"; shade = 0.5; edge = ""; }
+        else if (e === 9) ch = lum[i] < 0.42 ? (h < 0.5 ? "#" : "%") : h < 0.5 ? "&" : "8";
+        else if (e === 10) { ch = gu !== g ? "@" : gd !== g ? "H" : "#"; shade = 0.62; edge = ""; }
+        else if (e === 11) { if (hp > 0.02) { ch = "^"; shade = -0.25; } else if (hp < -0.02) ch = "/"; else if (h < 0.16) ch = ":"; }
+        else if (e === 12) { ch = lum[i] > 0.72 ? (gl !== g ? "/" : gr !== g ? "\\" : "|") : "="; shade = lum[i] > 0.72 ? 0.7 : 0.6; edge = ""; }
+        else if (e === 13) { ch = h < 0.4 ? "/" : h < 0.75 ? "\\" : "|"; shade = hp > 0 ? -0.3 : 0.66; edge = ""; }
+        else if (e === 14) { ch = gu !== g ? "^" : h < 0.5 ? "|" : "#"; shade = 0.6; edge = ""; }
+        const glyph = edge || ch;
+        if (glyph) putInk(i, GI[glyph], edge ? scaleC(col, 0.6 + 0.9 * dark) : shade < 0 ? lift(-shade) : scaleC(col, shade + 0.75 * dark));
+        // the wire view keeps the contours, and the few marks that say what a thing is
+        wir[i] = edge ? GI[edge] : ((e === 6 && ch === "~") || e === 4 || e === 10 || e === 12 || e === 13 || e === 14 || e === 3 || (e === 9 && h < 0.1)) && ch ? GI[ch] : 0;
+      }
+    for (let i = 0; i < NC; i += 1) { // the same world without its walkers, for the opening
+      const walker = own[i] === 3;
+      wirW[i] = walker ? 0 : wir[i];
+      ownW[i] = walker ? (lum[i] < 0 ? 2 : 1) : own[i];
+    }
+    return true;
+  };
 
   // Save the environment, including its walkers. The two construction
   // buffers above retain the underlying beach before the walkers were drawn.
   // Pose, glasses, smile and hoodie never invalidate this plate.
   const environment = [gch,ink,glo,mat,own,wir].map(buffer=>({buffer,saved:buffer.slice()}));
   let environmentKey = "";
-  const paintEnvironment = (s,L,t,lean) => {
+  let inWorld = false; // the backdrop on the grid is the 3D world
+  const paintEnvironment = (s,L,t,lean,state) => {
     gch.fill(0);
     ink.fill(0);
     glo.fill(0);
     mat.fill(0);
     own.fill(0);
     wir.fill(0);
+    const env = worldOf();
+    inWorld = Boolean(env) && paintEnvironment3d(env, state, L);
+    if (inWorld) return;
     paintSky(s, L, t, lean);
     paintClouds(s, L, t, lean);
     paintGulls(s, L, t, lean);
@@ -1154,10 +1267,10 @@
     ownW.set(own);
     paintWalkers(s, L, t, lean);
   };
-  const paintWorld = (s,L,t,lean,P) => {
-    const key=[t,s.hour,s.wind,s.tide,s.swell,s.walkers,lean].join("|");
+  const paintWorld = (s,L,t,lean,P,state) => {
+    const key=[t,s.hour,s.wind,s.tide,s.swell,s.walkers,lean,s.yaw,s.pitch,Boolean(worldOf())].join("|");
     if(key !== environmentKey) {
-      paintEnvironment(s,L,t,lean);
+      paintEnvironment(s,L,t,lean,state);
       environment.forEach(({buffer,saved})=>saved.set(buffer));
       environmentKey=key;
     } else {
@@ -1191,7 +1304,7 @@
     // The diagnostic views recolour these buffers in place.
     const stateKey = Object.values(s).join("|");
     if (stateKey !== fullColorState) {
-      paintWorld(s, L, t, lean, P);
+      paintWorld(s, L, t, lean, P, state);
       fullColorState = stateKey;
     }
     ctx.save();
@@ -1203,7 +1316,8 @@
       return;
     }
     if (view !== "rgb") {
-      recolour(view);
+      const env = inWorld && view !== "seg" ? worldOf() : null;
+      recolour(view, env && env.pixels(Object.assign({}, state, { view }), COLS, ROWS));
       fullColorState = "";
     }
     ctx.fillStyle = view === "rgb" ? `rgb(${L.term.map((v) => Math.round(v)).join(",")})` : "rgb(6,7,10)";
@@ -1213,7 +1327,7 @@
   };
 
   /* ---------- the buffer views: the same grid, every cell typed, in flat diagnostic colours ---------- */
-  const recolour = (view) => {
+  const recolour = (view, world) => {
     for (let i = 0; i < NC; i += 1) {
       const m = mat[i];
       const r = (i / COLS) | 0;
@@ -1221,7 +1335,10 @@
       const y = r * CH + CH / 2;
       const sky = m === M.SKY || m === M.SUN || m === M.CLOUD || m === M.GULL;
       let col;
-      if (view === "seg") {
+      if (world && own[i] !== 4) { // the 3D world's own buffer
+        col = [world[i * 4], world[i * 4 + 1], world[i * 4 + 2]];
+        if (view === "depth") col[0] = col[1] = col[2] = Math.max(8, col[0]);
+      } else if (view === "seg") {
         col = sky ? [124, 166, 232] : m === M.SEA || m === M.FOAM ? [52, 112, 204] : m === M.ROCK ? [142, 128, 122] : m === M.SAND || m === M.WET ? [232, 198, 122] : [234, 86, 98];
       } else if (view === "depth") {
         let d;
@@ -1414,6 +1531,8 @@
     const t = s.time;
     const lean = clamp(s.lean, -1, 1);
     if (personAt(pose(s), x, y)) return "person";
+    const env = worldOf();
+    if (env) return env.pick(x, y, state || {}) || "beach";
     const count = clamp(Math.round(s.walkers), 0, 5);
     for (let k = 0; k < count; k += 1) {
       const { x: wx, feet } = walkerAt(k, s, t, lean);

@@ -876,6 +876,75 @@
     P.box = [left, top, right + 1, GH];
   }
 
+  /* ---------- the 3D world behind him, redrawn on this grid ----------
+     When the shared world (assets/js/beach-env.js) is there, it is rendered at one sample per
+     cell and read back twice: what each cell shows, which feeds the same class and material
+     grids as the flat backdrop does, and its colours, which are cut down to a small palette
+     with an ordered dither. He is then laid over it from the sprite, as before. */
+  const worldOf = () => (window.BeachEnv && window.BeachEnv.ready() ? window.BeachEnv : null);
+  //             -  sky    cloud    sun    gull    sea    foam    sand    wet    rock    walker  land    boat    grass   tower
+  const ENV_Z = [0, Z_SKY, Z_SKY, Z_SKY, Z_SKY, Z_SEA, Z_SEA, Z_SAND, Z_SAND, Z_ROCK, Z_WALK, Z_SKY, Z_SEA, Z_ROCK, Z_SKY];
+  const ENV_M = [M_SKY, M_SKY, M_CLOUD, M_SUN, M_GULL, M_SEA, M_FOAM, M_SAND, M_WET, M_ROCK, M_WALK, M_LAND, M_BOAT, M_ROCK, M_LAND];
+  const WORLD = new Uint32Array(N); // the world's colour in each cell
+  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  const LEVELS = 15; // bands of brightness in the world's palette
+  const SEAM = 0.2; // how much of a band is dithered into the next
+  const layWorld = (env, state) => {
+    const ids = env.pixels(Object.assign({}, state, { view: "ids" }), GW, GH);
+    if (!ids) return false;
+    for (let i = 0; i < N; i += 1) {
+      const m = ids[i * 4] < 15 ? ids[i * 4] : 0;
+      IDX[i] = 0;
+      CLS[i] = ENV_Z[m];
+      MAT[i] = ENV_M[m];
+    }
+    return true;
+  };
+  const paintWorld = (env, state, view) => {
+    const px = env.pixels(Object.assign({}, state, { view, look: { grain: 0, vignette: 0.1, bloom: 0.7 } }), GW, GH);
+    if (!px) return;
+    for (let y = 0, i = 0; y < GH; y += 1)
+      for (let x = 0; x < GW; x += 1, i += 1) {
+        const o = i * 4;
+        if (view === "depth") {
+          // quantise into steps of 6, with a checker between: depth in pixel bands
+          const q = Math.max(8, px[o]) / 6;
+          const lo = Math.floor(q);
+          const g = (q - lo > 0.5 && (x + y) & 1 ? lo + 1 : lo) * 6;
+          WORLD[i] = pack(g, g, g);
+        } else if (view === "normal") {
+          WORLD[i] = pack(px[o] & 0xf8, px[o + 1] & 0xf8, px[o + 2] & 0xf8);
+        } else {
+          // Brightness falls into a few bands, with a little ordered dither where two bands meet; the hue is kept.
+          const r = px[o], g = px[o + 1], b = px[o + 2];
+          const luma = Math.sqrt((r * 0.3 + g * 0.55 + b * 0.15) / 255);
+          const f = luma * (LEVELS - 1);
+          const lo = Math.floor(f);
+          const d = (BAYER[(x & 3) + (y & 3) * 4] + 0.5) / 16;
+          // (bright things, the clouds and the foam, keep hard steps: a checker there reads as noise)
+          const edge = (f - lo - 0.5) / (luma > 0.86 ? 0.02 : SEAM) + 0.5; // 0..1 across the dithered seam between two bands
+          const band = (edge > d ? lo + 1 : lo) / (LEVELS - 1);
+          const k = luma > 0.02 ? (band * band) / (luma * luma) : 1;
+          WORLD[i] = pack(Math.min(255, r * k) & 0xf8, Math.min(255, g * k) & 0xf8, Math.min(255, b * k) & 0xf8);
+        }
+      }
+  };
+  /* The sprites of the 3D world, found again on the grid: one box around each run of columns that holds a walker. */
+  const worldWalkers = () => {
+    const boxes = [];
+    let box = null;
+    for (let x = 0; x < GW; x += 1) {
+      let top = -1, bottom = -1;
+      for (let y = HZ; y < GH; y += 1) if (CLS[y * GW + x] === Z_WALK) { if (top < 0) top = y; bottom = y; }
+      if (top < 0) { if (box) { boxes.push(box); box = null; } continue; }
+      if (!box) box = [x - 1, top - 1, x + 2, bottom + 2];
+      else { box[1] = Math.min(box[1], top - 1); box[2] = x + 2; box[3] = Math.max(box[3], bottom + 2); }
+    }
+    if (box) boxes.push(box);
+    return boxes;
+  };
+  let inWorld = false; // this frame's backdrop is the 3D world
+
   /* ---------- the views ---------- */
 
   const blit = (ctx) => {
@@ -885,7 +954,8 @@
   };
 
   const drawRgb = (ctx) => {
-    for (let i = 0; i < N; i += 1) PX[i] = PAL[IDX[i]];
+    if (inWorld) for (let i = 0; i < N; i += 1) PX[i] = CLS[i] === Z_ME ? PAL[IDX[i]] : WORLD[i];
+    else for (let i = 0; i < N; i += 1) PX[i] = PAL[IDX[i]];
     blit(ctx);
   };
 
@@ -900,6 +970,7 @@
       for (let x = 0; x < GW; x += 1) {
         const i = y * GW + x;
         const z = CLS[i];
+        if (inWorld && z !== Z_ME) { PX[i] = WORLD[i]; continue; }
         let g = 8;
         if (MAT[i] === M_BOAT) g = 46;
         else if (z === Z_SKY && MAT[i] === M_LAND) g=27;
@@ -923,7 +994,8 @@
       for (let x = 0; x < GW; x += 1) {
         const i = y * GW + x;
         const z = CLS[i];
-        if (MAT[i] === M_BOAT) PX[i] = IDX[i]===CL0 ? pack(146,154,241) : pack(109,149,243);
+        if (inWorld && z !== Z_ME) PX[i] = WORLD[i];
+        else if (MAT[i] === M_BOAT) PX[i] = IDX[i]===CL0 ? pack(146,154,241) : pack(109,149,243);
         else if (MAT[i] === M_LAND) PX[i] = pack(120,181,212);
         else if (z === Z_SKY) PX[i] = sky;
         else if (z === Z_SEA || z === Z_SAND) PX[i] = ground;
@@ -1130,7 +1202,12 @@
       }
     };
     if (parts.person > 0) box(meBox(P), WIRE_COL.person, "me = Person", parts.person >= 1 ? 0.9 : 0.5 * parts.person);
-    if (parts.walkers > 0) {
+    if (parts.walkers > 0 && inWorld) {
+      worldWalkers().forEach((b, k) => {
+        if (parts.walkers < 1 && tileOrder("walkers", Math.floor((b[0] + b[2]) / 2 / TILE), 0) > parts.walkers) return;
+        box(b, WIRE_COL.walkers, k === 0 ? "Walker" : "", 0.9);
+      });
+    } else if (parts.walkers > 0) {
       const count = clamp(Math.round(s.walkers), 0, 5);
       for (let k = 0; k < count; k += 1) {
         const o = tileOrder("walkers", Math.floor(walkerAt(k, s, t).col / TILE), 0);
@@ -1226,14 +1303,30 @@
     lastState = s;
     const parts = state.parts || {};
     bgReady = false;
-    if (view === "wire" && state.overlay !== true && ((parts.person !== undefined && +parts.person < 1) || (parts.walkers !== undefined && +parts.walkers < 1))) {
-      compose(s, L, t, true);
-      BG_IDX.set(IDX);
-      BG_CLS.set(CLS);
-      BG_MAT.set(MAT);
-      bgReady = true;
+    const env = worldOf();
+    const building = view === "wire" && state.overlay !== true && ((parts.person !== undefined && +parts.person < 1) || (parts.walkers !== undefined && +parts.walkers < 1));
+    inWorld = false;
+    if (env) {
+      if (building && layWorld(env, Object.assign({}, state, { walkers: 0 }))) {
+        BG_IDX.set(IDX);
+        BG_CLS.set(CLS);
+        BG_MAT.set(MAT);
+        bgReady = true;
+      }
+      inWorld = layWorld(env, state);
+      if (inWorld && view !== "wire" && view !== "seg") paintWorld(env, state, view);
     }
-    compose(s, L, t);
+    if (!inWorld) {
+      bgReady = false;
+      if (building) {
+        compose(s, L, t, true);
+        BG_IDX.set(IDX);
+        BG_CLS.set(CLS);
+        BG_MAT.set(MAT);
+        bgReady = true;
+      }
+      compose(s, L, t);
+    }
     placeMe(L, P);
     ctx.save();
     ctx.globalAlpha = 1;
@@ -1257,6 +1350,8 @@
     const s = normalize(state || {});
     const t = s.time;
     if (onMe(pose(s), x, y)) return "person";
+    const env = worldOf();
+    if (env) return env.pick(x, y, state || {}) || "beach";
     const count = clamp(Math.round(s.walkers), 0, 5);
     for (let k = 0; k < count; k += 1) {
       const b = walkerBox(k, s, t);

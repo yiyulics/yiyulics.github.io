@@ -6,7 +6,9 @@
  * assets/js/scenes/, each exposing
  * window.BeachScene = { W, H, draw(ctx, state), hit(x, y), pick(x, y, state) }.
  * The same world, drawn by different renderers: the style picker above the code selects one, and
- * the others are fetched only when asked for.
+ * the others are fetched only when asked for. Behind the person, all of them show one 3D world
+ * (assets/js/beach-env.js, WebGL 2), which is why the picture can be dragged to look around;
+ * where that is not available each renderer paints a flat backdrop of its own.
  *
  * Besides the picture ("rgb") and the buffers ("normal", "depth", "seg"), a scene can draw its
  * own construction ("wire"): the world as the program holds it, before it is painted. The stage
@@ -86,6 +88,18 @@
     });
   };
 
+  /* The 3D world the renderers share. It is optional: a browser without WebGL 2, or a visitor
+     saving data, gets the renderers' own flat backdrops. */
+  let worldReady;
+  const loadWorld = () => {
+    if (worldReady) return worldReady;
+    const connection = navigator.connection;
+    const skip = window.BeachEnv || (connection && connection.saveData);
+    worldReady = skip ? Promise.resolve() : scriptAt(sceneDir + "../beach-env.js").catch(() => {});
+    return worldReady;
+  };
+  const turns = () => (window.BeachEnv && window.BeachEnv.ready() ? window.BeachEnv : null); // the camera can turn in it
+
   let portraitReady;
   const loadScene = (style) => {
     if (scenes[style]) return Promise.resolve(scenes[style]);
@@ -98,7 +112,7 @@
       });
     }
     const ready = needsPortrait ? portraitReady : undefined;
-    loading[style] = Promise.resolve(ready)
+    loading[style] = Promise.all([ready, loadWorld()])
       .then(() => scriptAt(sceneDir + style + ".js"))
       .then(() => {
         const loaded = window.BeachScene;
@@ -154,6 +168,8 @@
     seconds: 0, // since the shutter
     playing: false,
     lean: 0, // the camera nudged sideways, -1..1
+    yaw: 0, // the camera turned to the right, radians
+    pitch: 0, // and tilted up
     hello: -1, // seconds into a wave of the hand, or -1
     intro: null,
     focus: null, // the part being pointed at, outlined over the picture
@@ -172,6 +188,8 @@
     glasses: option("glasses", "True") === "True",
     smile: param("smile", 0.8),
     lean: state.lean,
+    yaw: state.yaw,
+    pitch: state.pitch,
     hello: state.hello,
     view,
   });
@@ -566,7 +584,7 @@
     });
   }
 
-  /* On the picture: drag to lean the camera, click the person to say hi. */
+  /* On the picture: drag to look around, click the person to say hi. */
   const toFrame = (event) => {
     const rect = canvas.getBoundingClientRect();
     return [((event.clientX - rect.left) / rect.width) * W, ((event.clientY - rect.top) / rect.height) * H];
@@ -578,7 +596,7 @@
     const skipping = Boolean(state.intro); // a touch during the opening only ends the opening
     if (skipping) finishIntro();
     const [x, y] = toFrame(event);
-    grab = { x: event.clientX, moved: skipping, lean: state.lean, fx: x, fy: y };
+    grab = { x: event.clientX, y: event.clientY, moved: skipping, lean: state.lean, yaw: state.yaw, pitch: state.pitch, fx: x, fy: y };
     dragging = true;
     canvas.classList.add("is-active");
     canvas.setPointerCapture(event.pointerId);
@@ -586,10 +604,19 @@
   });
   canvas.addEventListener("pointermove", (event) => {
     if (!grab) return pointAt(event);
-    if (Math.abs(event.clientX - grab.x) > 3) grab.moved = true;
+    const dx = event.clientX - grab.x;
+    const dy = event.clientY - grab.y;
+    const world = turns();
+    if (Math.abs(dx) > 3 || (world && Math.abs(dy) > 3)) grab.moved = true;
     if (grab.moved) {
       setFocus(null);
-      state.lean = clamp(grab.lean + (event.clientX - grab.x) / 160, -1, 1);
+      state.lean = clamp(grab.lean + dx / 160, -1, 1);
+      if (world) {
+        // the world is held by the pointer: one frame unit of drag turns the camera by one frame unit of view
+        const perPixel = W / canvas.getBoundingClientRect().width / 520;
+        state.yaw = clamp(grab.yaw - dx * perPixel, -world.YAW_MAX, world.YAW_MAX);
+        state.pitch = clamp(grab.pitch + dy * perPixel, world.PITCH_MIN, world.PITCH_MAX);
+      }
     }
     refresh();
   });
@@ -637,12 +664,19 @@
     line.addEventListener("focusout", () => setFocus(null));
   });
 
-  // from the keyboard: arrows lean the camera, Enter or Space says hi
+  // from the keyboard: arrows turn the camera, Enter or Space says hi
   canvas.setAttribute("tabindex", "0");
   canvas.addEventListener("keydown", (event) => {
     if (!scene) return;
-    if (event.key === "ArrowLeft") state.lean = clamp(state.lean - 0.5, -1, 1);
-    else if (event.key === "ArrowRight") state.lean = clamp(state.lean + 0.5, -1, 1);
+    const world = turns();
+    const turn = (by) => {
+      state.lean = clamp(state.lean - by * 0.5, -1, 1);
+      if (world) state.yaw = clamp(state.yaw + by * 0.12, -world.YAW_MAX, world.YAW_MAX);
+    };
+    if (event.key === "ArrowLeft") turn(-1);
+    else if (event.key === "ArrowRight") turn(1);
+    else if (event.key === "ArrowUp" && world) state.pitch = clamp(state.pitch + 0.05, world.PITCH_MIN, world.PITCH_MAX);
+    else if (event.key === "ArrowDown" && world) state.pitch = clamp(state.pitch - 0.05, world.PITCH_MIN, world.PITCH_MAX);
     else if (event.key === "Enter" || event.key === " ") {
       if (state.hello < 0) state.hello = 0;
     } else return;

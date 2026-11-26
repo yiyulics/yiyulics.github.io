@@ -33,7 +33,7 @@
 <span class="ln">    draw(t, view="<span class="num num--switch" data-option="view" data-label="render view" data-values="rgb,normal,depth,seg,wire">rgb</span>")</span></code></pre>
     <div class="world__view">
       <img class="world__still" src="{{ '/images/world.webp' | relative_url }}?v={{ site.time | date: '%s' }}" width="480" height="400" alt="A smiling young man at the beach, drawn in coloured characters beneath a sunny sky. A small sailboat crosses the water behind him.">
-      <canvas class="world__canvas" width="480" height="400" hidden role="img" aria-label="An animated portrait of {{ site.data.profile.name | escape }} at the beach. Use the arrow keys to lean the camera and press Enter to wave."></canvas>
+      <canvas class="world__canvas" width="480" height="400" hidden role="img" aria-label="An animated portrait of {{ site.data.profile.name | escape }} at the beach. Use the arrow keys to look around and press Enter to wave."></canvas>
     </div>
     <div class="world__timeline" data-world-controls hidden>
       <button class="world__play" type="button" data-world-play aria-label="Let the scene run">
@@ -45,5 +45,5 @@
       <span class="world__frame" data-world-elapsed>shutter +0.0 s</span>
     </div>
   </div>
-  <figcaption class="world__caption">A small world model starring me at the beach. One program animates the wind and tide in all three styles.<span data-world-hint hidden> <span class="world__click">Click</span><span class="world__tap">Tap</span> the portrait to wave.</span></figcaption>
+  <figcaption class="world__caption">A small world model starring me at the beach. One program animates the wind and tide in all three styles.<span data-world-hint hidden> Drag the picture to look around; <span class="world__click">click</span><span class="world__tap">tap</span> the portrait to wave.</span></figcaption>
 </figure>

@@ -27,6 +27,7 @@
     {%- if first_scene == 'ascii' or first_scene == 'pixel' %}
     <script src="{{ '/assets/js/beach-portrait.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
     {%- endif %}
+    <script src="{{ '/assets/js/beach-env.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
     <script src="{{ '/assets/js/scenes/' | append: first_scene | append: '.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
     <script src="{{ '/assets/js/world.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
     {%- endif %}

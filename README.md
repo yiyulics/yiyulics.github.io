@@ -58,12 +58,13 @@ Yiyu Li 的学术主页：<https://yiyulics.github.io>。Jekyll 单页站点，�
 - 鼠标指向画面的某个部分，或指向生成它的那行代码，这部分的线稿会叠在画面上，对应的代码行同时高亮。
 - 代码里的数字可以拖动（或聚焦后用方向键）：时刻、风、潮位、浪高、行人数、笑容、帧率。
 - 首页默认显示 ASCII。在卡片顶部的 Style 栏可直接选择 ASCII、Pixel 或 Low-poly，代码里的 `Renderer(style=...)` 同步显示当前选择。眼镜、卫衣颜色和渲染视图也可点击切换。
-- 点画面里的人会挥手；拖画面是轻微的视差；下方的时间条可以播放、暂停、把时刻拖到傍晚或夜里。
+- 人物身后是一个真正的 3D 场景，三种画风共用：拖动画面可以转动镜头，左右看海湾，上下看天空（键盘用方向键）。点画面里的人会挥手；下方的时间条可以播放、暂停、把时刻拖到傍晚或夜里。
 
 涉及的文件：
 
 - `_includes/world.html`：代码片段和默认参数（改那里的数字就是改默认画面）。生成某部分世界的代码行带 `data-part`。
-- `assets/js/scenes/` 中的三个 Canvas 2D 渲染器按需加载，每个都提供 `style`、`W`、`H`、`draw(ctx, state)`、`hit(x, y)` 和 `pick(x, y, state)`。像素版与 ASCII 版共用 `assets/js/beach-portrait.js` 中的人物和关节。
+- `assets/js/scenes/` 中的三个渲染器按需加载，每个都提供 `style`、`W`、`H`、`draw(ctx, state)`、`hit(x, y)` 和 `pick(x, y, state)`。它们各自用自己的画法画人物；像素版与 ASCII 版共用 `assets/js/beach-portrait.js` 中的人物和关节。
+- `assets/js/beach-env.js`：人物身后的 3D 世界，用 WebGL 2 渲染，没有依赖任何库。地形、海面、带灯塔的小岛、帆船、行人都是代码生成的网格；卡通着色加描边，海面和湿沙有倒影，云、日月星辰和配色随时刻变化，最后做泛光和调色。Low-poly 直接把这幅画面铺在人物身后；Pixel 和 ASCII 把它按自己的网格读回来，再重画成像素（按亮度分级加抖动）或字符（轮廓、浪尖、沙粒、星星）。法线、深度、分割和线稿这几个视图是同一份几何体换一种画法。浏览器不支持 WebGL 2 时这个文件什么也不注册，三个渲染器会改用各自原来的平面背景，画面也就不能转动。
 - `assets/js/world.js`：舞台：读参数、计时、控件、开场动画和指向高亮。
 - `images/world.webp`：默认画面的静态图，没有 JavaScript 时显示。如果更换 `_data/profile.yml` 的 `hero.style` 或修改相应画面，请重新导出：在本地预览里对画面右键"图片另存为"，再 `cwebp -q 85 world.png -o images/world.webp`。
 
@@ -124,7 +125,8 @@ _includes/
   icon.html, motifs/     图标和论文示意图
 assets/css/main.css      样式（纯 CSS，含深色模式）
 assets/js/main.js        主题切换、导航高亮、摘要/BibTeX、复制、引用数、star 数
-assets/js/scenes/        首屏的三种画风（Canvas 2D）
+assets/js/scenes/        首屏的三种画风
+assets/js/beach-env.js   三种画风共用的 3D 场景（WebGL 2）
 assets/js/beach-portrait.js  像素版和 ASCII 版共用的人物
 assets/js/world.js       首屏互动小图：舞台、控件和开场动画
 assets/fonts/            自托管字体（Newsreader、Geist、Geist Mono，OFL 许可）
