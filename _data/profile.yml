@@ -9,7 +9,7 @@ location: Hong Kong SAR
 # `python3 scripts/encode_email.py` and paste the value it prints. The page decodes it in the browser.
 email_code: "DgYLGQhHXhoELxUBBUccVxQAHw=="
 avatar: /images/avatar.webp          # square, shown at 100px
-cv: /files/Yiyu_Li_CV.pdf            # rebuilt by scripts/build_public_cv.sh; shown in the top bar; remove this line to hide it
+cv: /files/Yiyu_Li_CV.pdf            # rebuilt by scripts/build_public_cv.sh; shown in the top bar (on phones, in the contact section); remove this line to hide it
 
 # ---- Hero (top of the page) ----
 hero:

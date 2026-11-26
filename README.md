@@ -26,7 +26,8 @@ Yiyu Li 的学术主页：<https://yiyulics.github.io>。Jekyll 单页站点，�
 仓库和页面源码里都不写邮箱明文，以免被爬虫收集。`_data/profile.yml` 的 `email_code` 存的是编码后的地址，页面在浏览器里把它还原：
 
 - 换邮箱：运行 `python3 scripts/encode_email.py`，输入地址，把打印出来的值填到 `email_code`。`python3 scripts/encode_email.py --check` 可以把当前的值解回来核对。
-- 页面上，联系方式一节是一个小终端，里面预先打好了一条命令：`echo <邮箱的 base64> | base64 -d`。访客按 Enter（或点那个 Enter 键）才会运行，输出邮箱，同时出现 "Email me" 和复制按钮。运行之前，页面里只有 base64，没有邮箱明文，也没有 `mailto:`。没开 JavaScript 时终端不出现。
+- 页面上，联系方式一节是一个可以输入的小终端，命令行里预先填好了一条命令：`echo <邮箱的 base64> | base64 -d`。访客点 "Show email"（或按 Enter）运行它，输出邮箱，同时出现 "Email me" 和复制按钮。运行之前，页面里只有 base64，没有邮箱明文，也没有 `mailto:`。没开 JavaScript 时终端不出现。
+- 终端里也可以输入别的命令：`help`、`./contact.sh`、`open cv.pdf`、`whoami`、`ls`、`cat`、`echo`、`base64`（可以用 `|` 连接）、`clear`；上下方向键翻历史。其他命令会提示 command not found。命令的定义在 `assets/js/main.js` 的 "Email" 一段。
 - 这只是防自动收集的混淆，不是加密：页面必须能还原地址，所以认真去读脚本的人也能还原。
 - 公开版 CV（`files/Yiyu_Li_CV.pdf`）里仍有邮箱，那是简历本身的内容。
 

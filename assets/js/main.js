@@ -197,12 +197,13 @@
     });
   });
 
-  /* ---- Email ----
+  /* ---- Email, and the terminal that prints it ----
      The address is not written in the page source. profile.yml holds it encoded
-     (scripts/encode_email.py) and it is decoded here. The contact section shows a small terminal
-     with a command already typed, the address in base64 piped to a decoder; the visitor runs it
-     with Enter. Until then the address itself is in this script only; running the command prints
-     it and shows the email and copy buttons. */
+     (scripts/encode_email.py) and it is decoded here, into this script only. The contact section
+     is a small terminal whose command line starts with the command that prints the address: the
+     address in base64, piped to a decoder. The visitor runs it with "Show email" or Enter, and
+     may type other commands instead. Once a command has printed the address, the email and copy
+     buttons appear. */
   const MAIL_KEY = "world.py";
   const mailAddress = (() => {
     try {
@@ -218,44 +219,228 @@
   const term = document.querySelector("[data-term]");
   if (mailAddress && term) {
     const part = (name) => term.querySelector(`[data-term-${name}]`);
+    const body = part("body");
+    const log = part("log");
+    const input = part("input");
+    const field = part("field");
     const run = part("run");
     const link = term.querySelector("[data-mail]");
-    part("code").textContent = btoa(String.fromCharCode(...new TextEncoder().encode(mailAddress)));
-    term.hidden = false;
+    const toBase64 = (text) => btoa(Array.from(new TextEncoder().encode(text), (byte) => String.fromCharCode(byte)).join(""));
+    const fromBase64 = (code) => new TextDecoder().decode(Uint8Array.from(atob(code), (char) => char.charCodeAt(0)));
+    const script = `echo ${toBase64(mailAddress)} | base64 -d`;
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
 
-    let done = false;
-    const execute = () => {
-      if (done) return;
-      done = true;
-      const hadFocus = term.contains(document.activeElement);
-      part("cursor").remove();
-      part("out").textContent = mailAddress;
-      part("out").hidden = false;
-      part("next").hidden = false;
+    /* -- the shell: a handful of commands, and pipes between them -- */
+    // split on spaces, keeping quoted text together; a bare | separates the commands of a pipe
+    const parse = (line) => {
+      const stages = [[]];
+      const pattern = /"([^"]*)"|'([^']*)'|(\|)|([^\s|"']+)/g;
+      let match;
+      while ((match = pattern.exec(line))) {
+        if (match[3]) stages.push([]);
+        else stages[stages.length - 1].push(match[1] ?? match[2] ?? match[4]);
+      }
+      return stages;
+    };
+
+    const files = () => ["contact.sh"].concat(term.dataset.cv ? ["cv.pdf"] : []);
+    const commands = {
+      help: () => [
+        "./contact.sh    print my email address",
+        ...(term.dataset.cv ? ["open cv.pdf     open my CV"] : []),
+        "whoami  ls  cat  echo  base64  clear",
+      ].join("\n"),
+      echo: (args) => (args[0] === "-n" ? args.slice(1).join(" ") : `${args.join(" ")}\n`),
+      base64: (args, stdin) => {
+        if (stdin === null) throw new Error("usage: echo <text> | base64 [-d]");
+        if (!args.some((arg) => ["-d", "-D", "--decode"].includes(arg))) return `${toBase64(stdin)}\n`;
+        try {
+          return fromBase64(stdin.replace(/\s+/g, ""));
+        } catch (error) {
+          throw new Error("base64: invalid input");
+        }
+      },
+      whoami: () => term.dataset.who,
+      ls: () => files().join("  "),
+      cat: (args) => {
+        if (!args.length) throw new Error("usage: cat <file>");
+        return args
+          .map((name) => {
+            const file = name.replace(/^\.\//, "");
+            if (file === "contact.sh") return script;
+            if (file === "cv.pdf" && term.dataset.cv) return "cat: cv.pdf is a PDF; try: open cv.pdf";
+            throw new Error(`cat: ${name}: No such file or directory`);
+          })
+          .join("\n");
+      },
+      open: (args) => {
+        const file = (args[0] || "").replace(/^\.\//, "");
+        if (file !== "cv.pdf" || !term.dataset.cv) throw new Error(args[0] ? `open: ${args[0]}: No such file or directory` : "usage: open cv.pdf");
+        window.open(term.dataset.cv, "_blank", "noopener");
+        return "opening cv.pdf";
+      },
+      "./contact.sh": () => mailAddress,
+      email: () => mailAddress,
+    };
+    ["sh", "bash", "zsh"].forEach((name) => {
+      commands[name] = (args) => {
+        if ((args[0] || "").replace(/^\.\//, "") === "contact.sh") return mailAddress;
+        throw new Error(`${name}: ${args[0] || "missing script"}: No such file or directory`);
+      };
+    });
+
+    // returns the text the line prints, or null when it prints nothing
+    const evaluate = (line) => {
+      let stream = null;
+      for (const [name, ...args] of parse(line)) {
+        if (!name) throw new Error("zsh: parse error near `|'");
+        if (!Object.hasOwn(commands, name)) throw new Error(`zsh: command not found: ${name}`);
+        stream = commands[name](args, stream);
+      }
+      return stream;
+    };
+
+    /* -- the screen -- */
+    const print = (text, kind) => {
+      const row = document.createElement("p");
+      if (kind) row.className = `term__${kind}`;
+      row.textContent = text;
+      log.append(row);
+      while (log.childElementCount > 60) log.firstElementChild.remove();
+    };
+    // the command line grows with what is typed; on touch screens it is drawn at 16px and scaled
+    // down (see .term__input), so its box is measured rather than assumed
+    const fit = () => {
+      input.style.height = "auto";
+      input.style.height = `${input.scrollHeight}px`;
+      field.style.height = `${input.getBoundingClientRect().height}px`;
+      body.scrollTop = body.scrollHeight;
+    };
+
+    let revealed = false;
+    const reveal = () => {
+      if (revealed) return;
+      revealed = true;
       run.hidden = true;
       part("hint").hidden = true;
       link.href = `mailto:${mailAddress}`;
       link.hidden = false;
       term.querySelector("[data-copy-mail]").hidden = false;
       term.classList.add("is-done");
-      if (hadFocus) link.focus({ preventScroll: true });
     };
 
-    run.addEventListener("click", execute);
-    // a click on the terminal puts the keyboard in it, as in a real one
-    term.addEventListener("click", (event) => {
-      if (!done && !event.target.closest("button, a")) run.focus({ preventScroll: true });
+    const past = [];
+    let at = 0;
+    let draft = ""; // what was being typed when the visitor started going back through the history
+    const execute = (line) => {
+      const text = line.trim();
+      const prompt = document.createElement("p");
+      const sign = document.createElement("span");
+      sign.className = "term__prompt";
+      sign.textContent = "$";
+      prompt.append(sign, ` ${text}`);
+      log.append(prompt);
+      if (text) {
+        if (past[past.length - 1] !== text) past.push(text);
+        if (/^clear$/.test(text)) {
+          log.replaceChildren();
+        } else {
+          try {
+            const output = evaluate(text);
+            if (output !== null && output !== "") {
+              const shown = output.replace(/\n$/, "");
+              const isMail = shown.trim() === mailAddress;
+              print(shown, isMail ? "out" : "text");
+              if (isMail) reveal();
+            }
+          } catch (error) {
+            print(error.message, "error");
+            if (/command not found/.test(error.message) && !revealed) print("try: help", "note");
+          }
+        }
+      }
+      at = past.length;
+      draft = "";
+      input.value = "";
+      fit();
+    };
+
+    input.value = script;
+    term.hidden = false;
+    fit();
+    new ResizeObserver(fit).observe(term);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+
+    input.addEventListener("input", fit);
+    input.addEventListener("keydown", (event) => {
+      if (event.isComposing) return;
+      if (event.key === "Enter") {
+        event.preventDefault();
+        execute(input.value);
+      } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+        if (!past.length) return;
+        event.preventDefault();
+        if (at === past.length) draft = input.value;
+        at = Math.max(0, Math.min(past.length, at + (event.key === "ArrowUp" ? -1 : 1)));
+        input.value = at < past.length ? past[at] : draft;
+        fit();
+      } else if (event.key === "l" && event.ctrlKey) {
+        event.preventDefault();
+        log.replaceChildren();
+        fit();
+      }
     });
-    // Enter also runs the command when nothing else has the keyboard and the terminal is in view
+
+    // the button runs the command that prints the address, whatever is on the command line
+    const showEmail = () => {
+      const hadFocus = term.contains(document.activeElement);
+      execute(script);
+      if (hadFocus) link.focus({ preventScroll: true });
+    };
+    run.addEventListener("click", showEmail);
+
+    // While the command line still holds the prefilled command, taking the keyboard selects all of
+    // it: Enter runs it as it is, and typing anything (help, say) replaces it instead of adding to it.
+    const untouched = () => !past.length && input.value === script;
+    input.addEventListener("focus", () => {
+      if (untouched()) setTimeout(() => untouched() && document.activeElement === input && input.select(), 0);
+    });
+    // a click on the terminal puts the keyboard in it, as in a real one
+    const caretToEnd = () => {
+      if (!untouched()) input.setSelectionRange(input.value.length, input.value.length);
+    };
+    body.addEventListener("click", (event) => {
+      if (event.target === input || String(window.getSelection())) return;
+      input.focus({ preventScroll: true });
+      caretToEnd();
+    });
+    // A link to the contact section hands the keyboard to the terminal, so that Enter runs it.
+    // On a touch screen that goes to the button: focusing the command line would raise the keyboard.
+    const arrive = () => {
+      if (window.location.hash !== "#contact") return;
+      if (coarse) {
+        if (!revealed) run.focus({ preventScroll: true });
+      } else {
+        input.focus({ preventScroll: true });
+        caretToEnd();
+      }
+    };
+    window.addEventListener("hashchange", arrive);
+    document.addEventListener("click", (event) => {
+      const anchor = event.target.closest('a[href$="#contact"]');
+      if (anchor && !term.contains(anchor)) setTimeout(arrive, 0);
+    });
+    arrive();
+    // Enter also shows the address when nothing else has the keyboard and the terminal is in view
     document.addEventListener("keydown", (event) => {
-      if (done || event.key !== "Enter" || event.defaultPrevented || event.repeat) return;
+      if (revealed || event.key !== "Enter" || event.defaultPrevented || event.repeat) return;
       const active = document.activeElement;
       if (active && active !== document.body && active !== document.documentElement) return;
       const box = term.getBoundingClientRect();
       const middle = (box.top + box.bottom) / 2;
       if (middle < 0 || middle > window.innerHeight) return;
       event.preventDefault();
-      execute();
+      showEmail();
     });
   }
 

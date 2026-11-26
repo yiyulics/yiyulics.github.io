@@ -1829,12 +1829,36 @@ a.pub__media:hover img {
 }
 
 .term__body {
-  min-height: 5.1rem; /* three lines, so nothing moves when the command has run */
+  height: 7.7rem; /* five lines; older lines scroll away, so nothing below moves */
   padding: 0.7rem 0.85rem 0.5rem;
   color: var(--ink);
   font: 400 0.75rem/1.7 var(--mono);
   overflow-wrap: anywhere;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
   cursor: text;
+}
+
+.term__log p {
+  white-space: pre-wrap;
+}
+
+.term__note {
+  color: var(--ink-3);
+}
+
+.term__text {
+  color: var(--ink-2);
+}
+
+.term__error {
+  color: var(--ink-2);
+}
+
+.term__out {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .term__prompt {
@@ -1844,23 +1868,44 @@ a.pub__media:hover img {
   user-select: none;
 }
 
-.term__out {
-  color: var(--accent);
-  font-weight: 600;
+.term__line {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5em;
+  cursor: text;
 }
 
-.term__cursor {
-  display: inline-block;
-  width: 0.5em;
-  height: 1.15em;
-  margin-left: 0.15em;
-  vertical-align: text-bottom;
-  box-shadow: inset 0 0 0 1px var(--ink-2);
+.term__field {
+  flex: 1;
+  min-width: 0;
 }
 
-.term:focus-within .term__cursor {
-  background: var(--ink);
-  box-shadow: none;
+.term__input {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  caret-color: var(--accent);
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  resize: none;
+}
+
+/* A phone zooms the page when a field with small type takes the keyboard. The command line is
+   set at 16px there and drawn at three quarters of its size, which looks the same as 12px. */
+@media (pointer: coarse) {
+  .term__input {
+    width: 133.334%;
+    font-size: 16px;
+    transform: scale(0.75);
+    transform-origin: 0 0;
+  }
 }
 
 .term__foot {
@@ -1875,26 +1920,26 @@ a.pub__media:hover img {
 .term__run {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.22rem 0.6rem 0.22rem 0.45rem;
-  border: 1px solid var(--rule-strong);
-  border-bottom-width: 2px;
-  border-radius: 0.4rem;
-  background: var(--surface);
-  color: var(--ink);
-  font: 550 0.75rem/1.4 var(--mono);
+  gap: 0.5rem;
+  padding: 0.3rem 0.5rem 0.3rem 0.75rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: 550 0.8125rem/1.4 var(--sans);
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, transform 0.08s;
+  transition: filter 0.15s, transform 0.08s;
 }
 
 .term__run kbd {
-  font: inherit;
-  color: var(--accent);
+  padding: 0 0.3rem;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, var(--accent-ink) 18%, transparent);
+  font: 500 0.75rem/1.5 var(--mono);
 }
 
 .term__run:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  filter: brightness(1.08);
 }
 
 .term__run:active {
@@ -1906,9 +1951,26 @@ a.pub__media:hover img {
   font: 400 0.75rem/1.4 var(--mono);
 }
 
+.term__hint b {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
 .term__foot .copy-button {
   width: 1.9rem;
   height: 1.9rem;
+}
+
+/* here the "Copied" note opens to the right of the button, into the empty part of the bar */
+.term__foot .copy-button::after {
+  bottom: auto;
+  top: 50%;
+  left: calc(100% + 0.45rem);
+  transform: translate(-0.2rem, -50%);
+}
+
+.term__foot .copy-button.is-done::after {
+  transform: translate(0, -50%);
 }
 
 .term + .contact__place,
@@ -1939,6 +2001,16 @@ a.pub__media:hover img {
   align-items: center;
   gap: 0.6rem 0.85rem;
   margin-top: 1.4rem;
+}
+
+/* the CV button here is for narrow screens only (the top bar shows it otherwise) */
+.contact__cv {
+  display: none;
+}
+
+/* the first icon's box has room around the drawing: pull it back so the drawing lines up with the card above */
+.contact__actions .links {
+  margin-left: -0.55rem;
 }
 
 /* ---------- A paper's figure, opened over the page (main.js) ---------- */
@@ -2130,6 +2202,14 @@ html:has(.lightbox[open]) {
     display: none;
   }
 
+  .contact__cv {
+    display: inline-flex;
+  }
+
+  .contact__actions .links {
+    margin-left: 0;
+  }
+
   .topbar__inner {
     gap: 0.9rem;
   }
@@ -2177,8 +2257,15 @@ html:has(.lightbox[open]) {
     letter-spacing: 0.03em;
   }
 
-  .hero__actions .links {
-    margin-left: -0.45rem;
+  /* seven chips on a phone: a little tighter, so the first screen still ends with the button */
+  .hero__tags {
+    gap: 0.32rem;
+    margin-top: 1.25rem;
+  }
+
+  .hero__tags li {
+    padding: 0.15rem 0.55rem;
+    font-size: 0.78rem;
   }
 
   .world__code {
@@ -2226,10 +2313,6 @@ html:has(.lightbox[open]) {
 /* ---------- Motion ---------- */
 
 @media (prefers-reduced-motion: no-preference) {
-  .term:focus-within .term__cursor {
-    animation: term-blink 1.1s steps(1) infinite;
-  }
-
   .hero__text > *,
   .hero .world {
     animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
@@ -2242,12 +2325,6 @@ html:has(.lightbox[open]) {
   .hero__text > :nth-child(6) { animation-delay: 0.25s; }
   .hero__text > :nth-child(n + 7) { animation-delay: 0.3s; }
   .hero .world { animation-delay: 0.2s; }
-}
-
-@keyframes term-blink {
-  50% {
-    opacity: 0;
-  }
 }
 
 @keyframes rise {

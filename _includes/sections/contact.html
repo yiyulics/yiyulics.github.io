@@ -14,20 +14,24 @@
       <div class="contact__ways">
         {%- if profile.email_code %}
         {%- comment %}
-          A small terminal with the command already typed: the address in base64, piped to a decoder.
-          The visitor presses Enter to run it; only then is the address printed and the email and copy
-          buttons shown. Before that the address is not in the page (see "Email" in main.js).
+          A small terminal. The command that prints the address is already typed (the address in
+          base64, piped to a decoder); the visitor runs it with "Show email" or Enter, or types
+          something else. The address is not in the page until then (see "Email" in main.js).
         {%- endcomment %}
-        <div class="term" data-term hidden>
+        <div class="term" data-term hidden data-who="{{ profile.name | escape }} · {{ profile.role | escape }}, {{ profile.affiliation | escape }}"{% if profile.cv %} data-cv="{{ profile.cv | relative_url }}"{% endif %}>
           <div class="term__bar"><span class="term__file">{% include icon.html name="file" %}contact.sh</span></div>
-          <div class="term__body" aria-live="polite">
-            <p><span class="term__prompt" aria-hidden="true">$</span> echo <span data-term-code></span> | base64 -d<span class="term__cursor" data-term-cursor aria-hidden="true"></span></p>
-            <p class="term__out" data-term-out hidden></p>
-            <p data-term-next hidden><span class="term__prompt" aria-hidden="true">$</span> <span class="term__cursor" aria-hidden="true"></span></p>
+          <div class="term__body" data-term-body>
+            <div class="term__log" data-term-log role="log" aria-live="polite">
+              <p class="term__note"># my email address, base64-encoded</p>
+            </div>
+            <label class="term__line">
+              <span class="term__prompt" aria-hidden="true">$</span>
+              <span class="term__field" data-term-field><textarea class="term__input" data-term-input rows="1" maxlength="400" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Command line. Press Enter to run; type help for a list of commands."></textarea></span>
+            </label>
           </div>
           <div class="term__foot">
-            <button class="term__run" type="button" data-term-run aria-label="Press Enter to run the command and print my email address"><kbd>⏎</kbd><span>Enter</span></button>
-            <span class="term__hint" data-term-hint>to run</span>
+            <button class="term__run" type="button" data-term-run><span>Show email</span><kbd aria-hidden="true">⏎</kbd></button>
+            <span class="term__hint" data-term-hint>or type <b>help</b></span>
             <a class="button button--primary button--small" href="#contact" data-mail hidden>{% include icon.html name="mail" %}<span>Email me</span></a>
             <button class="icon-button copy-button" type="button" data-copy data-copy-mail aria-label="Copy my email address" title="Copy my email address" hidden><span class="copy__icon copy__icon--idle">{% include icon.html name="copy" %}</span><span class="copy__icon copy__icon--done">{% include icon.html name="check" %}</span></button>
           </div>
@@ -38,6 +42,10 @@
         <p class="contact__place">{% include icon.html name="pin" %}<span>{{ profile.affiliation | escape }}, {{ profile.location | escape }}</span></p>
         {%- endif %}
         <div class="contact__actions">
+          {%- if profile.cv %}
+          {%- comment %} Only on narrow screens, where the top bar has no room for its CV button. {% endcomment %}
+          <a class="button contact__cv" href="{{ profile.cv | relative_url }}">{% include icon.html name="file" %}<span>CV</span></a>
+          {%- endif %}
           <ul class="links">
             {%- for link in profile.links %}
             {%- unless link.icon == "mail" %}
