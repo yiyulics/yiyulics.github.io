@@ -101,7 +101,7 @@ Yiyu Li 的学术主页：<https://yiyulics.github.io>。Jekyll 单页站点，�
 ### 机构图标和网站图标
 
 - Experience 时间线和 Education 里机构名前面的小图标：在 `_data/experience.yml` 或 `_data/education.yml` 的条目里写 `logo: /images/orgs/xxx.png`（方形图，96px 左右即可，白底）。不写就显示原来的圆点。现有图标取自各机构官网的站点图标或页头 logo。
-- 网站图标（浏览器标签页上的小图）是像素风渲染器画的头像，文件是 `images/favicon*.png`、`favicon.ico`、`apple-touch-icon.png`、`android-chrome-*.png`。
+- 网站图标（浏览器标签页上的小图）是像素风渲染器画的头像，文件是 `images/` 下的 `favicon*.png`、`favicon.ico`、`apple-touch-icon.png`、`android-chrome-*.png`，另外根目录有一份同样的 `favicon.ico`（很多爬虫和浏览器默认去根目录找）。换图标时两处的 `favicon.ico` 都要换。
 
 ### 其他细节
 
