@@ -2313,6 +2313,11 @@ html:has(.lightbox[open]) {
 /* ---------- Motion ---------- */
 
 @media (prefers-reduced-motion: no-preference) {
+  /* the status dot breathes: a ring leaves it and fades, every two seconds */
+  .status__label::before {
+    animation: status-pulse 2s ease-out infinite;
+  }
+
   .hero__text > *,
   .hero .world {
     animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
@@ -2325,6 +2330,17 @@ html:has(.lightbox[open]) {
   .hero__text > :nth-child(6) { animation-delay: 0.25s; }
   .hero__text > :nth-child(n + 7) { animation-delay: 0.3s; }
   .hero .world { animation-delay: 0.2s; }
+}
+
+@keyframes status-pulse {
+  0% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent), 0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent);
+  }
+
+  70%,
+  100% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent), 0 0 0 0.5rem color-mix(in srgb, var(--ok) 0%, transparent);
+  }
 }
 
 @keyframes rise {
